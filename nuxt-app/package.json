@@ -6,6 +6,7 @@
     "start": "node .output/server/index.mjs"
   },
   "devDependencies": {
+    "@nuxtjs/pwa": "^3.3.5",
     "nuxt3": "latest"
   },
   "dependencies": {
