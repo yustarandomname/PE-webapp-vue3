@@ -2,13 +2,15 @@
   <div>
     <h1>Welcome to Nuxt.js!!!</h1>
     <Avatar>test</Avatar>
+    <Button>test</Button>
   </div>
 </template>
 
 <script>
-import Avatar from "@/components/Avatar";
+import Avatar from "@/components/Avatar.vue";
+import Button from "@/components/Button.vue";
 export default {
-  components: { Avatar },
+  components: { Avatar, Button },
 };
 </script>
 
