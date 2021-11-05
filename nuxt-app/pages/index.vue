@@ -3,19 +3,11 @@
     <h1>Welcome to Nuxt.js!!!</h1>
     <ion-icon name="heart"></ion-icon>
 
-    <InfiniteList @fetch="fetchItems" :autoLoad="false">
-      <template #default="card">
-        <div class="card">
-          <h1>ID: {{ card.item.id}}</h1>
-          <p>Title: {{card.item.id}}</p>
-        </div>
-      </template>
+    <Button @click="openModal">Open Modal</Button>
 
-      <template #loading>
-        <h1>Loading</h1>
-        <div>Loading...</div>
-      </template>
-    </InfiniteList>
+    <Modal title="Modal" v-if="modalState" @close="toggleModal">
+      <h1>This is a modal</h1>
+    </Modal>
   </div>
 </template>
 
@@ -24,23 +16,24 @@ import Avatar from "@/components/Avatar.vue";
 import Button from "@/components/Button.vue";
 import InfiniteList from "@/components/InfiniteList.vue";
 
-export default {
+import {ref, defineComponent} from "vue";
+
+export default defineComponent({
   components: { Avatar, Button, InfiniteList },
   setup() {
-    const fetchItems = async (list, amount) => {
-      const cards = new Array(amount).fill("Loaded").map(() => {
-        return {
-          id: Math.floor(Math.random() * 10000),
-          title: "Card",
-        }
-      })
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      list.value = [...list.value, ...cards];
+    const modalState = ref(false);
+
+    const openModal = () => {
+      modalState.value = true
     }
 
-    return { fetchItems };
-  },
-};
+    const toggleModal = () => {
+      modalState.value = !modalState.value
+    }
+
+    return {modalState, openModal, toggleModal}
+  }
+});
 </script>
 
 <style lang="scss">
