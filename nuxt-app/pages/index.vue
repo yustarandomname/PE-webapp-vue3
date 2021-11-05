@@ -1,13 +1,16 @@
 <template>
   <div>
+    <NavigationBar userName="Webcie" userAvatar=""/>
+
+    
     <h1>Welcome to Nuxt.js!!!</h1>
     <ion-icon name="heart"></ion-icon>
 
-    <Button @click="openModal">Open Modal</Button>
+    <!-- <Button @click="openModal">Open Modal</Button>
 
     <Modal title="Modal" v-if="modalState" @close="toggleModal">
       <h1>This is a modal</h1>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
