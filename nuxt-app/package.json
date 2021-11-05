@@ -10,6 +10,8 @@
     "nuxt3": "latest"
   },
   "dependencies": {
+    "axios": "^0.24.0",
+    "lodash": "^4.17.21",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0"
   }

@@ -1,15 +1,20 @@
 <template>
   <div>
     <h1>Welcome to Nuxt.js!!!</h1>
-    <Avatar>test</Avatar>
-    <Button icon="heart">test</Button>
     <ion-icon name="heart"></ion-icon>
 
-    <InfiniteList @fetch="$fetch">
-      <h1>item1</h1>
-      <div>item1</div>
-      <div>item1</div>
-      <div>item1</div>
+    <InfiniteList @fetch="fetchItems" :autoLoad="false">
+      <template #default="card">
+        <div class="card">
+          <h1>ID: {{ card.item.id}}</h1>
+          <p>Title: {{card.item.id}}</p>
+        </div>
+      </template>
+
+      <template #loading>
+        <h1>Loading</h1>
+        <div>Loading...</div>
+      </template>
     </InfiniteList>
   </div>
 </template>
@@ -21,18 +26,19 @@ import InfiniteList from "@/components/InfiniteList.vue";
 
 export default {
   components: { Avatar, Button, InfiniteList },
-  data: () => ({
-    posts: [],
-  }),
-  async fetch(list, amount) {
-    const cards = new Array(amount).fill("Loaded").map(() => {
-      return {
-        id: Math.floor(Math.random() * 10000),
-        title: "Card",
-      };
-    });
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    list.value = [...list.value, ...cards];
+  setup() {
+    const fetchItems = async (list, amount) => {
+      const cards = new Array(amount).fill("Loaded").map(() => {
+        return {
+          id: Math.floor(Math.random() * 10000),
+          title: "Card",
+        }
+      })
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      list.value = [...list.value, ...cards];
+    }
+
+    return { fetchItems };
   },
 };
 </script>
