@@ -36,7 +36,7 @@ export default defineComponent({
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: var(--width-medium);
+  width: var(--width, var(--width-medium));
   min-height: 20rem;
   max-width: 90vw;
   background-color: var(--white-color);
