@@ -37,7 +37,9 @@ export default defineComponent({
 <template>
   <div class="wrapper">
     <div class="navigationBar">
-      <div class="logo"></div>
+      <NuxtLink to="./">
+        <div class="logo"></div>
+      </NuxtLink>
       <Avatar :src="userAvatar" @click="toggleMenu">{{ userName }}</Avatar>
     </div>
 
@@ -47,7 +49,7 @@ export default defineComponent({
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .wrapper {
   --padding-ver: 1rem;
   --padding-hor: min(2rem, 5vw);
@@ -69,14 +71,18 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   z-index: 101;
-}
 
-.navigationBar .logo {
-  height: 3rem;
-  width: 100%;
-  background: url(https://proteus-eretes.nl/images/template/proteuslogo.svg);
-  background-size: contain;
-  background-position: left;
-  background-repeat: no-repeat;
+  & > a {
+    width: 100%;
+
+    & .logo {
+      height: 3rem;
+      width: 100%;
+      background: url(https://proteus-eretes.nl/images/template/proteuslogo.svg);
+      background-size: contain;
+      background-position: left;
+      background-repeat: no-repeat;
+    }
+  }
 }
 </style>
