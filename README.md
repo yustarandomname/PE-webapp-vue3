@@ -1,8 +1,8 @@
 # PE-webapp-vue3
-🚧  PE webapp is currently working on setting up a blog form. If you would like to help head over to [issues](https://github.com/Proteus-Eretes/PE-webapp-vue3/issues).
 
+🚧  PE webapp met Vue3. Zie [issues](https://github.com/Proteus-Eretes/PE-webapp-vue3/issues) voor wat er nog moet gebeuren.
 
-## Getting started
+## Om te beginnen
 ```bash
 cd nuxt-app
 yarn install
