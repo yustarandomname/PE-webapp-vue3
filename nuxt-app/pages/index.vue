@@ -41,17 +41,24 @@ export default defineComponent({
       const cards = new Array(amount).fill("Loaded").map(() => {
         const id = Math.floor(Math.random() * 10000).toString();
         const content = getRandomParagraph(id);
+        const user = {
+            name: "Webcie",
+            avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
+            url: "https://proteus-eretes.nl",
+          }
+
+
         return {
           id,
           header: "Card",
           datePosted: "Vandaag",
           content,
           image: "https://proteus-eretes.nl/fotodir/0/0_l.jpg",
-          postedBy: {
-            name: "Webcie",
-            avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
-            url: "https://proteus-eretes.nl",
-          },
+          postedBy: user,
+          comments: [
+            {id: 1, user, content: "Hallo ik vind dit een leuke post"},
+            {id: 3, user, content: "Hallo ik vind dit ook een leuke post"}
+          ], 
           categories: ["Hallo"],
         };
       });

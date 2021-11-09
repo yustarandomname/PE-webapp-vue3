@@ -1,5 +1,5 @@
 <template>
-  <Modal style="--width: 40rem" v-if="card" @close="closeCard">
+  <Modal style="--width: 45rem" v-if="card" @close="closeCard">
     <template #header>
       <div class="title">{{ card.header }}</div>
       <ion-icon v-if="`current-user=card.user`" icon="pencil" />
@@ -26,13 +26,19 @@
 
     <p>{{ card.content }}</p>
     
-    
+    <div class="commentHeader">Comments:</div>
+    <div class="comments" v-if="card.comments && card.comments.length > 0">
+      <div class="comment" v-for="comment in card.comments">
+        <Comment :comment="comment" />
+      </div>
+    </div>
 
   </Modal>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
+import Comment from "./../Comment.vue"
 import Modal from "./../Modal.vue";
 import type { Card as CardType } from "./../../types/card";
 
@@ -40,6 +46,7 @@ export default defineComponent({
   name: "BlogOpen",
   components: {
     Modal,
+    Comment
   },
   props: {
     card: {
@@ -79,5 +86,10 @@ ion-icon {
   display: flex;
   justify-content: flex-end;
   --width: fit-content;
+}
+
+.commentsHeader {
+  font-size: var(--header);
+  color: var(--grey-color-900)
 }
 </style>
