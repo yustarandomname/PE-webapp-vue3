@@ -42,11 +42,10 @@ export default defineComponent({
         const id = Math.floor(Math.random() * 10000).toString();
         const content = getRandomParagraph(id);
         const user = {
-            name: "Webcie",
+            fullname: "Webcie",
             avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
             url: "https://proteus-eretes.nl",
           }
-
 
         return {
           id,
@@ -79,10 +78,11 @@ export default defineComponent({
       content: "",
       image: "loading",
       postedBy: {
-        name: "",
+        fullname: "",
         avatar: "",
         url: "",
       },
+      comments: [],
       categories: [],
     };
 

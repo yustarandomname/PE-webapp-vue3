@@ -3,13 +3,13 @@
     <div class="comment">
       <div class="content">{{ comment.content }}</div>
       <NuxtLink class="postedBy" :to="comment.user.url">{{
-        comment.user.name
+        comment.user.fullname
       }}</NuxtLink>
     </div>
     <div class="actions">
       <ion-icon icon="return-down-back-outline" />
       <ion-icon icon="thumbs-up-outline" />
-      <ion-icon v-if="true" class="iconClose" icon="close" />
+      <ion-icon v-if="true" class="iconClose" icon="trash-outline" />
     </div>
   </div>
 </template>
@@ -62,7 +62,6 @@ export default defineComponent({
     }
 
     & .iconClose {
-      font-size: var(--title);
       color: var(--secondary-color-700);
 
       &:hover {
