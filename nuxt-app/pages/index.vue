@@ -26,6 +26,8 @@ import type { Card as CardType } from "../types/card";
 import { Ref, defineComponent } from "vue";
 import { getRandomParagraph } from "./../util/getRandomParagraph";
 
+// import httpClient from ""
+
 export default defineComponent({
   components: { Avatar, Button, InfiniteList, Blog, BlogOpen },
   setup() {
@@ -42,10 +44,10 @@ export default defineComponent({
         const id = Math.floor(Math.random() * 10000).toString();
         const content = getRandomParagraph(id);
         const user = {
-            fullname: "Webcie",
-            avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
-            url: "https://proteus-eretes.nl",
-          }
+          fullname: "Webcie",
+          avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
+          url: "https://proteus-eretes.nl",
+        }
 
         return {
           id,
