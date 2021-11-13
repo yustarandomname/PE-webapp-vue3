@@ -85,4 +85,12 @@ export default defineComponent({
     }
   }
 }
+
+.size-large select {
+  width: 100%;
+}
+
+.size-small select {
+  width: 10rem;
+}
 </style>
