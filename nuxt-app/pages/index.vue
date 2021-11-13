@@ -26,8 +26,6 @@ import type { Card as CardType } from "../types/card";
 import { Ref, defineComponent } from "vue";
 import { getRandomParagraph } from "./../util/getRandomParagraph";
 
-// import httpClient from ""
-
 export default defineComponent({
   components: { Avatar, Button, InfiniteList, Blog, BlogOpen },
   setup() {
@@ -47,7 +45,7 @@ export default defineComponent({
           fullname: "Webcie",
           avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
           url: "https://proteus-eretes.nl",
-        }
+        };
 
         return {
           id,
@@ -57,9 +55,9 @@ export default defineComponent({
           image: "https://proteus-eretes.nl/fotodir/0/0_l.jpg",
           postedBy: user,
           comments: [
-            {id: 1, user, content: "Hallo ik vind dit een leuke post"},
-            {id: 3, user, content: "Hallo ik vind dit ook een leuke post"}
-          ], 
+            { id: 1, user, content: "Hallo ik vind dit een leuke post" },
+            { id: 3, user, content: "Hallo ik vind dit ook een leuke post" },
+          ],
           categories: ["Hallo"],
         };
       });

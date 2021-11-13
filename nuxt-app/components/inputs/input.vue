@@ -24,7 +24,8 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from "vue";
+import { PropType, defineComponent, ref, computed } from "vue";
+import { randomId } from "../util/random";
 
 type InputTypes =
   | "text"
@@ -69,7 +70,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     // random string
-    const id = `input-${Math.random().toString(36).substr(2, 9)}`;
+    const id = randomId("input");
 
     const focus = ref(false);
 
