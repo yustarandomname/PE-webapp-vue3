@@ -14,6 +14,12 @@ export default defineNuxtConfig({
         nomodule: true,
       },
     ],
+    link: [
+      {
+        href: "https://fonts.googleapis.com/icon?family=Material+Icons",
+        rel: "stylesheet",
+      },
+    ],
   },
   vue: {
     compilerOptions: {
