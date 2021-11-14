@@ -42,10 +42,10 @@ export default defineComponent({
         const id = Math.floor(Math.random() * 10000).toString();
         const content = getRandomParagraph(id);
         const user = {
-            fullname: "Webcie",
-            avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
-            url: "https://proteus-eretes.nl",
-          }
+          fullname: "Webcie",
+          avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
+          url: "https://proteus-eretes.nl",
+        };
 
         return {
           id,
@@ -55,9 +55,9 @@ export default defineComponent({
           image: "https://proteus-eretes.nl/fotodir/0/0_l.jpg",
           postedBy: user,
           comments: [
-            {id: 1, user, content: "Hallo ik vind dit een leuke post"},
-            {id: 3, user, content: "Hallo ik vind dit ook een leuke post"}
-          ], 
+            { id: 1, user, content: "Hallo ik vind dit een leuke post" },
+            { id: 3, user, content: "Hallo ik vind dit ook een leuke post" },
+          ],
           categories: ["Hallo"],
         };
       });
