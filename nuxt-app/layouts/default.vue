@@ -21,7 +21,7 @@ export default defineComponent({
       url: "https://proteus-eretes.nl/groepen/commissie/id:2",
     };
 
-    if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | User>(null));
+    if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | User>(user));
 
     if (!nuxtApp.$authenticated)
       nuxtApp.provide("authenticated", ref<boolean>(false));

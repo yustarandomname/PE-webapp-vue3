@@ -83,7 +83,7 @@ export default defineComponent({
     & .logo {
       height: 3rem;
       width: 100%;
-      background: url(./logo.png);
+      background: url(/logo.png);
       background-size: contain;
       background-position: left;
       background-repeat: no-repeat;
