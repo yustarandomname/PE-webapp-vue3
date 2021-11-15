@@ -40,7 +40,12 @@ export default defineComponent({
       <NuxtLink to="./">
         <div class="logo"></div>
       </NuxtLink>
-      <Avatar :src="userAvatar" @click="toggleMenu">{{ userName }}</Avatar>
+      <Avatar
+        v-if="userName || userAvatar"
+        :src="userAvatar"
+        @click="toggleMenu"
+        >{{ userName }}</Avatar
+      >
     </div>
 
     <Modal v-if="menu" @close="closeMenu">
@@ -78,7 +83,7 @@ export default defineComponent({
     & .logo {
       height: 3rem;
       width: 100%;
-      background: url(https://proteus-eretes.nl/images/template/proteuslogo.svg);
+      background: url(./logo.png);
       background-size: contain;
       background-position: left;
       background-repeat: no-repeat;

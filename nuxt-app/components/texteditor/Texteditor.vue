@@ -86,7 +86,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .editorWrapper {
   margin: 1rem auto;
   width: var(--width-large);
