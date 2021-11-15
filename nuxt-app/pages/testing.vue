@@ -2,6 +2,8 @@
   <div>
     <h1 ref="headline">Headline</h1>
 
+    <Login />
+
     <Texteditor v-model="input2" />
 
     <div class="container">
