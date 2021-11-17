@@ -51,6 +51,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .avatar {
+  --size: 3rem;
   position: relative;
   display: flex;
   align-items: center;
@@ -58,9 +59,9 @@ export default defineComponent({
   width: var(--width, fit-content);
   margin: var(--margin, 0);
 
-  & .img {
-    height: 3rem;
-    width: 3rem;
+  & img {
+    height: var(--size);
+    width: var(--size);
     cursor: pointer;
     border-radius: 50%;
     border: 1px solid var(--grey-color-200);
@@ -69,16 +70,12 @@ export default defineComponent({
   // IMAGE SIZE
   &.size- {
     &large > img {
-      height: 4rem;
-      width: 4rem;
+      --size: 4rem;
     }
 
     &small {
       font-size: 0.8rem;
-      & > img {
-        height: 2rem;
-        width: 2rem;
-      }
+      --size: 2rem;
     }
   }
 
