@@ -21,7 +21,9 @@ export default defineComponent({
   setup() {
     const menu = ref(false);
 
-    const toggleMenu = () => {
+    const toggleMenu = (e: Event) => {
+      if (!e) return;
+
       menu.value = !menu.value;
     };
 
@@ -44,8 +46,8 @@ export default defineComponent({
         v-if="userName || userAvatar"
         :src="userAvatar"
         @click="toggleMenu"
-        >{{ userName }}</Avatar
-      >
+        :name="userName"
+      />
     </div>
 
     <Modal v-if="menu" @close="closeMenu">

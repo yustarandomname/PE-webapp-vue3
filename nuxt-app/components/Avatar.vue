@@ -1,5 +1,5 @@
 <template>
-  <div class="avatar" :class="classes" @click="$emit('click')">
+  <div class="avatar" :class="classes" @click="emitClick">
     <slot>{{ name }}</slot>
     <img :src="src" :alt="alt" />
   </div>
@@ -36,7 +36,7 @@ export default defineComponent({
       default: "",
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const classes = computed(() => {
       const classObject: { [key: string]: boolean } = {};
       classObject["size-" + props.size] = !!props.size;
@@ -44,7 +44,12 @@ export default defineComponent({
       return classObject;
     });
 
-    return { classes };
+    const emitClick = () => {
+      console.log("click");
+      emit("click");
+    };
+
+    return { classes, emitClick };
   },
 });
 </script>

@@ -24,7 +24,7 @@ export default defineComponent({
     if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | User>(user));
 
     if (!nuxtApp.$authenticated)
-      nuxtApp.provide("authenticated", ref<boolean>(false));
+      nuxtApp.provide("authenticated", ref<boolean>(true));
 
     nuxtApp.provide("signIn", (email: string, password: string) => {
       nuxtApp.$user.value = user;
