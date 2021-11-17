@@ -25,84 +25,53 @@ import BlogOpen from "@/components/cards/BlogOpen.vue";
 
 import type { Card as CardType } from "../types/card";
 
-import { Ref, defineComponent } from "vue";
-import { getRandomParagraph } from "./../util/getRandomParagraph";
+import { Ref, defineComponent, onMounted, onBeforeUnmount } from "vue";
+import { getRandomCards, loadingCard } from "./../util/getRandomParagraph";
 
 export default defineComponent({
   components: { Avatar, Button, InfiniteList, Blog, BlogOpen },
+
   setup() {
+    const nuxtApp = useNuxtApp();
     const openedCard: Ref<CardType | null> = ref(null);
 
+    const fetchItems = async (list: Ref<CardType[]>, amount: number) => {
+      const cards = getRandomCards(amount);
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      list.value = [...list.value, ...cards];
+    };
+
+    // Handle opening / closing cards
     const openCard = (card: CardType) => {
       openedCard.value = card;
 
-      const nextURL = `/cards?id=${card.id}`;
-      const nextState = { additionalInformation: "Updated the URL with JS" };
-      window.history.pushState(nextState, "card", nextURL);
+      const nextURL = `?id=${card.id}`;
+      nuxtApp.$router.push(nextURL);
     };
 
-    const backToNewsfeed = () => (openedCard.value = null);
+    const backToNewsfeed = () => {
+      openedCard.value = null;
+      nuxtApp.$router.push("/");
+    };
 
-    const fetchItems = async (list: Ref<CardType[]>, amount: number) => {
-      const cards = new Array(amount).fill("Loaded").map(() => {
-        const id = Math.floor(Math.random() * 10000).toString();
-        const content = getRandomParagraph(id);
-        const user = {
-          fullname: "Webcie",
-          avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
-          url: "https://proteus-eretes.nl",
-        };
-
-        return {
-          id,
-          header: "Card",
-          datePosted: "Vandaag",
-          content,
-          image: "https://proteus-eretes.nl/fotodir/0/0_l.jpg",
-          postedBy: user,
-          comments: [
-            {
-              id: 1,
-              user,
-              likes: 1,
-              content: "Hallo ik vind dit een leuke post",
-            },
-            {
-              id: 3,
-              user,
-              likes: 1,
-              content: "Hallo ik vind dit ook een leuke post",
-            },
-          ],
-          likes: 1,
-          categories: ["Hallo"],
-        };
-      });
-
-      if (list.value.length > 0) {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        list.value = [...list.value, ...cards];
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        list.value = cards;
+    onMounted(() => {
+      const cardId = nuxtApp.$router.currentRoute.value.query?.id;
+      if (cardId) {
+        nuxtApp.$router.push("/");
+        nuxtApp.$router.push(`/cards?id=${cardId}`);
       }
-    };
 
-    const loadingCard: CardType = {
-      id: "loading",
-      header: "Loading",
-      datePosted: "",
-      content: "",
-      image: "loading",
-      postedBy: {
-        fullname: "",
-        avatar: "",
-        url: "",
-      },
-      likes: 0,
-      comments: [],
-      categories: [],
-    };
+      window.addEventListener("popstate", (e: PopStateEvent) => {
+        if (e.state.current == "/") {
+          openedCard.value = null;
+        }
+      });
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener("popstate", () => {});
+    });
 
     return { fetchItems, openedCard, openCard, backToNewsfeed, loadingCard };
   },

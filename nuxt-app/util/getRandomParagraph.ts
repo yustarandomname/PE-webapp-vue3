@@ -1,3 +1,5 @@
+import { Card } from "../types/card";
+
 const data = [
   `Er doen in totaal 6 proteus bootjes en nog 1 combi bootje mee.
     Om 10:30 wordt de spits afgebeten door het Asepos/Laga/Proteus bootje en zij hebben wat pittige tegenstanders met Laga en Njord. In hetzelfde blok start de DGb4+ met Sophie Koopman op slag. In blok 2 wordt dit opgevolgd door het bootje van Gilles Deiters in de zware dubbel 4.
@@ -46,7 +48,7 @@ const data = [
     de PvB
 
     link naar enquête: https://forms.gle/8opfexUYwwTGvhmM8`,
-    `Beste Leden,
+  `Beste Leden,
 
     Gisteravond was weer een persco, waar nieuwe maatregelen zijn aangekondigd. Deze maatregelen hebben helaas invloed op de toegankelijkheid van de vereniging, maar gelukkig kunnen wij alle huidige activiteiten op de vereniging uit blijven voeren. 
     Hieronder staan de regels die wij vanaf 6 november zullen gaan hanteren op de vereniging. 
@@ -88,10 +90,65 @@ const data = [
     Met Hemelsblauwe groet,
     
     Merel Bouma
-    h.t. Secretaris der D.S.R. Proteus-Eretes`
+    h.t. Secretaris der D.S.R. Proteus-Eretes`,
 ];
 
 export const getRandomParagraph = (id: string) => {
   const dataIndex = parseInt(id) % data.length;
   return data[dataIndex];
+};
+
+export const getRandomCards = (amount: number) => {
+  const cards = new Array(amount).fill("Loaded").map(() => {
+    const id = Math.floor(Math.random() * 10000).toString();
+    const content = getRandomParagraph(id);
+    const user = {
+      fullname: "Webcie",
+      avatar: "https://proteus-eretes.nl/fotodir/0/0_tumb.jpg",
+      url: "https://proteus-eretes.nl",
+    };
+
+    return {
+      id,
+      header: "Card",
+      datePosted: "Vandaag",
+      content,
+      image: "https://proteus-eretes.nl/fotodir/0/0_l.jpg",
+      postedBy: user,
+      comments: [
+        {
+          id: 1,
+          user,
+          likes: 1,
+          content: "Hallo ik vind dit een leuke post",
+        },
+        {
+          id: 3,
+          user,
+          likes: 1,
+          content: "Hallo ik vind dit ook een leuke post",
+        },
+      ],
+      likes: 1,
+      categories: ["Hallo"],
+    };
+  });
+
+  return cards;
+};
+
+export const loadingCard: Card = {
+  id: "loading",
+  header: "Loading",
+  datePosted: "",
+  content: "",
+  image: "loading",
+  postedBy: {
+    fullname: "",
+    avatar: "",
+    url: "",
+  },
+  likes: 0,
+  comments: [],
+  categories: [],
 };
