@@ -46,7 +46,8 @@
   /* CORNER RADIUS */
   --corner-radius-large: 1rem;
   --corner-radius: 0.5rem;
-  --inner-corner-radius: 0.25rem;
+  --corner-radius-small: 0.25rem;
+  --inner-corner-radius: var(--corner-radius-small);
 
   /* BACKGROUND */
   --background: var(--white-color);

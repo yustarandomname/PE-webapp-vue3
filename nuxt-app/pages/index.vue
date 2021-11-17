@@ -10,7 +10,9 @@
       </template>
     </InfiniteList>
 
-    <BlogOpen :card="openedCard" @closeCard="closeCard" />
+    <div v-if="openedCard" class="openCardWrapper">
+      <BlogOpen :card="openedCard" @clickBackToNews="backToNewsfeed" />
+    </div>
   </div>
 </template>
 
@@ -33,9 +35,13 @@ export default defineComponent({
 
     const openCard = (card: CardType) => {
       openedCard.value = card;
+
+      const nextURL = `/cards?id=${card.id}`;
+      const nextState = { additionalInformation: "Updated the URL with JS" };
+      window.history.pushState(nextState, "card", nextURL);
     };
 
-    const closeCard = () => (openedCard.value = null);
+    const backToNewsfeed = () => (openedCard.value = null);
 
     const fetchItems = async (list: Ref<CardType[]>, amount: number) => {
       const cards = new Array(amount).fill("Loaded").map(() => {
@@ -55,9 +61,20 @@ export default defineComponent({
           image: "https://proteus-eretes.nl/fotodir/0/0_l.jpg",
           postedBy: user,
           comments: [
-            { id: 1, user, content: "Hallo ik vind dit een leuke post" },
-            { id: 3, user, content: "Hallo ik vind dit ook een leuke post" },
+            {
+              id: 1,
+              user,
+              likes: 1,
+              content: "Hallo ik vind dit een leuke post",
+            },
+            {
+              id: 3,
+              user,
+              likes: 1,
+              content: "Hallo ik vind dit ook een leuke post",
+            },
           ],
+          likes: 1,
           categories: ["Hallo"],
         };
       });
@@ -82,11 +99,25 @@ export default defineComponent({
         avatar: "",
         url: "",
       },
+      likes: 0,
       comments: [],
       categories: [],
     };
 
-    return { fetchItems, openedCard, openCard, closeCard, loadingCard };
+    return { fetchItems, openedCard, openCard, backToNewsfeed, loadingCard };
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.openCardWrapper {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  overflow: scroll;
+  padding-top: 4rem;
+  top: 0;
+  left: 0;
+  background: var(--grey-color-200);
+}
+</style>
