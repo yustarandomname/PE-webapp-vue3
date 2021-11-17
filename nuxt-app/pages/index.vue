@@ -42,7 +42,7 @@ export default defineComponent({
       list.value = [...list.value, ...cards];
     };
 
-    // Handle opening / closing cards
+    // HANDLE OPEN / CLOSE BLOG POST
     const openCard = (card: CardType) => {
       openedCard.value = card;
 
