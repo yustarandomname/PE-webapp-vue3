@@ -1,9 +1,9 @@
 <template>
   <Modal v-if="!authenticated">
-    <h1>Login</h1>
-    <Input label="email" v-model="email" />
-    <Input label="password" type="password" v-model="password" />
-    <Button @click="login">Login</Button>
+    <template #header>Login</template>
+    <Input size="large" label="email" v-model="email" />
+    <Input size="large" label="password" type="password" v-model="password" />
+    <Button size="large" @click="login">Login</Button>
   </Modal>
 </template>
 
