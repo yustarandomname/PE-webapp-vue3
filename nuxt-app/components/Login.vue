@@ -26,7 +26,9 @@ export default defineComponent({
     const email = ref("");
     const password = ref("");
 
-    const login = () => {
+    const login = (e: Event) => {
+      if (!e) return;
+
       nuxtApp.$signIn(email.value, password.value);
     };
 

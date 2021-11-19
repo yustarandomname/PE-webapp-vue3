@@ -8,6 +8,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { User } from "../types/user";
+import { $fetch } from 'ohmyfetch';
 
 export default defineComponent({
   name: "defaultNavigationBar",
@@ -21,13 +22,20 @@ export default defineComponent({
       url: "https://proteus-eretes.nl/groepen/commissie/id:2",
     };
 
-    if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | User>(user));
+    if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | User>(null));
 
     if (!nuxtApp.$authenticated)
-      nuxtApp.provide("authenticated", ref<boolean>(true));
+      nuxtApp.provide("authenticated", ref<boolean>(false));
 
-    nuxtApp.provide("signIn", (email: string, password: string) => {
-      nuxtApp.$user.value = user;
+    nuxtApp.provide("signIn", async (email: string, password: string) => {
+      await nuxtApp.$httpClient('/sanctum/csrf-cookie');
+      await nuxtApp.$httpClient('/v1/auth/login', {
+        method: 'POST',
+        data: { email, password },
+      });
+      const { data } = await nuxtApp.$httpClient('/v1/auth/me');
+
+      nuxtApp.$user.value = data;
       nuxtApp.$authenticated.value = true;
     });
 
