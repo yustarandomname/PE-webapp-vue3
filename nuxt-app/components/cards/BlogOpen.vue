@@ -1,95 +1,240 @@
 <template>
-  <Modal style="--width: 45rem" v-if="card" @close="closeCard">
-    <template #header>
-      <div class="title">{{ card.header }}</div>
-      <ion-icon v-if="`current-user=card.user`" icon="pencil" />
-      <NuxtLink :to="'cards?id=' + card.id">
-        <ion-icon icon="expand-outline" />
-      </NuxtLink>
+  <div class="BlogOpenWrapper">
+    <section class="actionButtons">
+      <Button
+        size="small"
+        state="primary"
+        icon="arrow_back"
+        @click="backToNewsfeed"
+      >
+        Terug naar nieuwsfeed
+      </Button>
+      <Button size="small" icon="edit" @click="edit">Aanpassen</Button>
+    </section>
 
-      <ion-icon class="largeIcon" icon="close" @click="closeCard" />
-    </template>
-
-    <div
-      v-if="card.image"
+    <section
       class="image"
-      :style="'background:url(' + card.image + ')'"
+      v-if="card?.image"
+      :style="'background: url(' + card?.image + ')'"
     />
 
-    <div class="meta" v-if="card.postedBy">
-      <Avatar :src="card.postedBy.avatar">
-        <a :href="card.postedBy.url" target="_blank">{{
-          card.postedBy.name
-        }}</a>
-      </Avatar>
-    </div>
-
-    <p>{{ card.content }}</p>
-    
-    <div class="commentHeader">Comments:</div>
-    <div class="comments" v-if="card.comments && card.comments.length > 0">
-      <div class="comment" v-for="comment in card.comments">
-        <Comment :comment="comment" />
+    <section class="content">
+      <div class="titles">
+        <div>
+          <div class="header">{{ card?.header }}</div>
+          <div class="date">{{ card?.datePosted }}</div>
+        </div>
+        <Avatar :src="card?.postedBy.avatar">{{
+          card?.postedBy.fullname
+        }}</Avatar>
       </div>
-    </div>
+      {{ card?.content }}
+    </section>
 
-  </Modal>
+    <section class="comments">
+      <div class="commentTitle">Reageersels</div>
+      <div class="comment" v-for="comment in comments">
+        <div>
+          {{ comment.content }}
+          <div class="author">{{ comment.user.fullname }}</div>
+        </div>
+        <div class="actions">
+          <Button size="tiny" icon="celebration"> {{ comment.likes }}</Button>
+          <Button size="tiny" icon="edit" />
+          <Button size="tiny" icon="delete" />
+        </div>
+      </div>
+
+      <div class="newComment">
+        <Textarea
+          size="large"
+          placeholder="nieuw reactie"
+          :minRows="2"
+          v-model="newComment"
+        />
+      </div>
+    </section>
+
+    <section class="actionButtons bottomActions">
+      <Button
+        v-if="canShare"
+        size="small"
+        state="primary"
+        icon="share"
+        @click="share"
+      >
+        Delen
+      </Button>
+      <Button size="small" state="primary" icon="celebration" @click="like">
+        {{ likes }}
+      </Button>
+      <Button size="small" icon="reply" @click="comment">Reageer</Button>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import Comment from "./../Comment.vue"
-import Modal from "./../Modal.vue";
+import Avatar from "./../Avatar.vue";
+import Button from "./../Button.vue";
+import Textarea from "./../inputs/Textarea.vue";
 import type { Card as CardType } from "./../../types/card";
 
 export default defineComponent({
   name: "BlogOpen",
   components: {
-    Modal,
-    Comment
+    Avatar,
+    Button,
+    Textarea,
   },
   props: {
     card: {
-      type: Object as PropType<CardType | null>,
+      type: Object as PropType<CardType>,
     },
   },
-  setup(_, { emit }) {
-    const closeCard = () => emit("closeCard");
+  setup(props, { emit }) {
+    const { $user } = useNuxtApp();
+    const backToNewsfeed = () => emit("clickBackToNews");
+    const edit = () => emit("clickEdit");
 
-    return { closeCard };
+    const canShare = ref(false);
+    const comments = ref(props.card?.comments || []);
+    const newComment = ref("");
+
+    const share = async (e: Event) => {
+      if (!e || !navigator || !navigator.share) return;
+
+      const shareData = {
+        title: props.card?.header,
+        text: props.card?.content,
+        url: "localhost:8000",
+      };
+
+      (await navigator?.share) && navigator.share(shareData);
+    };
+    const like = () => console.log("like");
+    const comment = (e: Event) => {
+      console.log(newComment.value);
+      if (!e || !newComment.value) return; // if no comment content -> no comment
+
+      const newCommentObj = {
+        id: 123,
+        user: $user,
+        likes: 1,
+        content: newComment.value,
+      };
+
+      comments.value.push(newCommentObj);
+      newComment.value = "";
+    };
+
+    const likes = computed(() => {
+      if (!props.card) return "like";
+      if (props.card.likes == 1) return props.card.likes + " like";
+      return props.card.likes + " likes";
+    });
+
+    onMounted(() => {
+      if (!!navigator?.share) canShare.value = true; // init canShare
+    });
+
+    return {
+      backToNewsfeed,
+      edit,
+      like,
+      likes,
+      share,
+      canShare,
+      comment,
+      comments,
+      newComment,
+    };
   },
 });
 </script>
 
-<style lang="scss">
-.title {
-  width: 100%;
+<style lang="scss" scoped>
+.BlogOpenWrapper {
+  width: 40rem;
+  max-width: 90vw;
+  margin: 5rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--margin-medium);
 }
 
-ion-icon {
-  cursor: pointer;
+.actionButtons {
+  display: flex;
+  gap: var(--margin-small);
 
-  &.largeIcon {
-    font-size: 1.5em;
+  &.bottomActions {
+    justify-content: end;
   }
 }
 
 .image {
-  min-height: 15rem;
-  margin: var(--margin-small) 0;
-  background-position: center center !important;
-  background-size: cover !important;
+  width: 100%;
+  height: 15rem;
   border-radius: var(--corner-radius);
+  background-size: cover !important;
+  background-position: center center !important;
 }
 
-.meta {
-  display: flex;
-  justify-content: flex-end;
-  --width: fit-content;
+.content {
+  background: var(--white-color);
+  padding: var(--padding-medium);
+  border-radius: var(--corner-radius);
+
+  & .titles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    & .header {
+      font-size: var(--header);
+    }
+
+    & .date {
+      font-size: var(--small);
+      color: var(--grey-color-800);
+    }
+  }
 }
 
-.commentsHeader {
-  font-size: var(--header);
-  color: var(--grey-color-900)
+.comments {
+  & .commentTitle {
+    font-size: var(--subheader);
+    font-weight: bold;
+  }
+
+  & .comment {
+    margin-top: var(--margin-small);
+    background: var(--grey-color-400);
+    border-radius: var(--corner-radius-small);
+    padding: var(--padding-small);
+    display: flex;
+    justify-content: space-between;
+
+    & .author {
+      font-size: var(--small);
+      color: var(--grey-color-800);
+    }
+
+    & .actions {
+      display: flex;
+      gap: var(--margin-small);
+
+      & button:not(.active) {
+        --bg: var(--grey-color-500);
+        --color: var(--grey-color-800);
+      }
+    }
+  }
+
+  & .newComment {
+    --bg: var(--grey-color-500);
+    margin-top: 0.5rem;
+  }
 }
 </style>

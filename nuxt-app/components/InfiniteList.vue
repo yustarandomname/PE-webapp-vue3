@@ -45,7 +45,6 @@ export default defineComponent({
       emit("fetch", list, props.initCount);
 
       if (props.autoLoad) {
-        console.log("auto load");
         window.addEventListener("scroll", () => {
           if (!!loading.value) return;
           const scrollTop = window.innerHeight + window.scrollY;

@@ -1,27 +1,29 @@
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, PropType } from "vue";
+
+type ButtonState = "defualt" | "primary" | "secondary" | "disabled";
 
 export default defineComponent({
   name: "Button",
   props: {
     icon: {
-      type: String,
+      type: String as PropType<string>,
       default: "",
     },
     state: {
-      type: String,
+      type: String as PropType<ButtonState>,
       default: "default",
     },
     size: {
-      type: String,
+      type: String as PropType<"tiny" | "small" | "medium" | "large">,
       default: "medium",
     },
     loading: {
-      type: Boolean,
+      type: Boolean as PropType<boolean>,
       default: false,
     },
     disabled: {
-      type: Boolean,
+      type: Boolean as PropType<boolean>,
       default: false,
     },
   },
@@ -40,13 +42,17 @@ export default defineComponent({
 </script>
 
 <template>
-  <button @click="$emit('click')" :class="classes" :disabled="disabled || loading">
+  <button
+    @click="$emit('click')"
+    :class="classes"
+    :disabled="disabled || loading"
+  >
     <div v-if="loading">
-      <ion-icon name="time-outline" />
+      <i v-if="icon" class="material-icons">hourglass_empty</i>
       Loading...
     </div>
     <div v-else>
-      <ion-icon v-if="icon" :name="icon" />
+      <i v-if="icon" class="material-icons">{{ icon }}</i>
       <slot />
     </div>
   </button>
@@ -65,8 +71,8 @@ button {
   background: var(--bg);
   border-radius: var(--corner-radius);
   cursor: pointer;
-  outline-offset: 0px;
-  transition: outline-offset 0.2s;
+  transform: scale(1);
+  transition: transform 0.2s;
 
   & > div {
     display: flex;
@@ -89,9 +95,16 @@ button {
   }
 
   /* SIZE */
+  &.size-tiny {
+    height: 2.5rem;
+    min-width: max-content;
+    padding: 0 var(--padding-small);
+    font-size: 0.8rem;
+  }
   &.size-small {
-    height: 2em;
-    min-width: 10rem;
+    height: 2.5rem;
+    min-width: max-content;
+    padding: 0 var(--padding-medium);
     font-size: 0.8rem;
   }
   &.size-large {
@@ -99,20 +112,21 @@ button {
     width: 100%;
     min-width: unset;
   }
+
+  &:hover {
+    transform: scale(1.05);
+
+    &.size-tiny {
+      transform: scale(1.1);
+    }
+  }
 }
 
-/* STATE */
+/* DISABLED */
 button.state-disabled,
 button.disabled {
   --bg: var(--grey-color-200);
   --color: var(--grey-color-500);
   cursor: not-allowed !important;
-}
-
-/* HOVER */
-button:hover:not(.state-disabled, .disabled),
-.state-hover {
-  outline: 1px solid var(--color);
-  outline-offset: -5px;
 }
 </style>

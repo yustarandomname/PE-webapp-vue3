@@ -21,7 +21,9 @@ export default defineComponent({
   setup() {
     const menu = ref(false);
 
-    const toggleMenu = () => {
+    const toggleMenu = (e: Event) => {
+      if (!e) return;
+
       menu.value = !menu.value;
     };
 
@@ -44,8 +46,8 @@ export default defineComponent({
         v-if="userName || userAvatar"
         :src="userAvatar"
         @click="toggleMenu"
-        >{{ userName }}</Avatar
-      >
+        :name="userName"
+      />
     </div>
 
     <Modal v-if="menu" @close="closeMenu">
@@ -71,11 +73,12 @@ export default defineComponent({
   padding: var(--padding-ver) var(--padding-hor);
   top: 0;
   left: 0;
-  background: #ffffff6e;
+  background: #ffffffab;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 101;
+  backdrop-filter: blur(7px) saturate(2);
 
   & > a {
     width: 100%;

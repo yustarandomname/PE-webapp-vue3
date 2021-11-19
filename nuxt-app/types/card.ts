@@ -4,6 +4,7 @@ import { User } from "./user";
 export interface Comment {
   id: number;
   user: User;
+  likes: number;
   content: string;
 }
 
@@ -17,5 +18,6 @@ export interface Card {
   image: string;
   postedBy: User;
   comments: Comment[];
+  likes: number;
   categories: string[];
 }
