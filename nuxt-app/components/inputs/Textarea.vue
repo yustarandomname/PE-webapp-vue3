@@ -83,6 +83,12 @@ export default defineComponent({
   position: relative;
   width: var(--width, 20rem);
 
+  &.size- {
+    &large {
+      width: 100%;
+    }
+  }
+
   & .label {
     font-size: var(--small);
     user-select: none;
@@ -91,8 +97,8 @@ export default defineComponent({
   }
 
   & .textarea {
-    background: var(--grey-color-200);
-    border-radius: 0.25rem;
+    background: var(--bg, var(--grey-color-200));
+    border-radius: var(--inner-corner-radius);
     padding: 0.5rem;
     width: 100%;
     overflow-y: auto;

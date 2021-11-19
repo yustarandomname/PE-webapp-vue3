@@ -1,7 +1,6 @@
 <template>
   <div class="BlogOpenWrapper">
     <section class="actionButtons">
-      <!-- TODO: icons -->
       <Button
         size="small"
         state="primary"
@@ -34,7 +33,7 @@
 
     <section class="comments">
       <div class="commentTitle">Reageersels</div>
-      <div class="comment" v-for="comment in card?.comments">
+      <div class="comment" v-for="comment in comments">
         <div>
           {{ comment.content }}
           <div class="author">{{ comment.user.fullname }}</div>
@@ -45,10 +44,25 @@
           <Button size="tiny" icon="delete" />
         </div>
       </div>
+
+      <div class="newComment">
+        <Textarea
+          size="large"
+          placeholder="nieuw reactie"
+          :minRows="2"
+          v-model="newComment"
+        />
+      </div>
     </section>
 
     <section class="actionButtons bottomActions">
-      <Button size="small" state="primary" icon="share" @click="share">
+      <Button
+        v-if="canShare"
+        size="small"
+        state="primary"
+        icon="share"
+        @click="share"
+      >
         Delen
       </Button>
       <Button size="small" state="primary" icon="celebration" @click="like">
@@ -63,6 +77,7 @@
 import { defineComponent, PropType } from "vue";
 import Avatar from "./../Avatar.vue";
 import Button from "./../Button.vue";
+import Textarea from "./../inputs/Textarea.vue";
 import type { Card as CardType } from "./../../types/card";
 
 export default defineComponent({
@@ -70,6 +85,7 @@ export default defineComponent({
   components: {
     Avatar,
     Button,
+    Textarea,
   },
   props: {
     card: {
@@ -77,12 +93,40 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const { $user } = useNuxtApp();
     const backToNewsfeed = () => emit("clickBackToNews");
     const edit = () => emit("clickEdit");
 
-    const share = () => console.log("share");
+    const canShare = ref(false);
+    const comments = ref(props.card?.comments || []);
+    const newComment = ref("");
+
+    const share = async (e: Event) => {
+      if (!e || !navigator || !navigator.share) return;
+
+      const shareData = {
+        title: props.card?.header,
+        text: props.card?.content,
+        url: "localhost:8000",
+      };
+
+      (await navigator?.share) && navigator.share(shareData);
+    };
     const like = () => console.log("like");
-    const comment = () => console.log("comment");
+    const comment = (e: Event) => {
+      console.log(newComment.value);
+      if (!e || !newComment.value) return; // if no comment content -> no comment
+
+      const newCommentObj = {
+        id: 123,
+        user: $user,
+        likes: 1,
+        content: newComment.value,
+      };
+
+      comments.value.push(newCommentObj);
+      newComment.value = "";
+    };
 
     const likes = computed(() => {
       if (!props.card) return "like";
@@ -90,7 +134,21 @@ export default defineComponent({
       return props.card.likes + " likes";
     });
 
-    return { backToNewsfeed, edit, like, likes, share, comment };
+    onMounted(() => {
+      if (!!navigator?.share) canShare.value = true; // init canShare
+    });
+
+    return {
+      backToNewsfeed,
+      edit,
+      like,
+      likes,
+      share,
+      canShare,
+      comment,
+      comments,
+      newComment,
+    };
   },
 });
 </script>
@@ -145,10 +203,9 @@ export default defineComponent({
 }
 
 .comments {
-  & .commmentsTitle {
+  & .commentTitle {
     font-size: var(--subheader);
     font-weight: bold;
-    color: var(--grey-color-800);
   }
 
   & .comment {
@@ -173,6 +230,11 @@ export default defineComponent({
         --color: var(--grey-color-800);
       }
     }
+  }
+
+  & .newComment {
+    --bg: var(--grey-color-500);
+    margin-top: 0.5rem;
   }
 }
 </style>
