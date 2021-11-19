@@ -73,11 +73,12 @@ export default defineComponent({
   padding: var(--padding-ver) var(--padding-hor);
   top: 0;
   left: 0;
-  background: #ffffff6e;
+  background: #ffffffab;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 101;
+  backdrop-filter: blur(7px) saturate(2);
 
   & > a {
     width: 100%;
