@@ -1,5 +1,27 @@
+<template>
+  <div class="wrapper">
+    <div class="navigationBar">
+      <NuxtLink to="./">
+        <div class="logo"></div>
+      </NuxtLink>
+      <Avatar
+        v-if="user?.fullName || user?.photoMetaData.MEDIUM"
+        :src="user.photoMetaData.MEDIUM"
+        @click="toggleMenu"
+        :name="user.fullName"
+      />
+    </div>
+
+    <Modal v-if="menu" @close="closeMenu">
+      <template #header> Header </template>
+      <Button size="large" @click="signOut"> signOut</Button>
+    </Modal>
+  </div>
+</template>
+
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, PropType } from "vue";
+import type { user } from "../types/user";
 
 import Avatar from "./Avatar.vue";
 import Modal from ".//Modal.vue";
@@ -11,15 +33,11 @@ export default defineComponent({
     Modal,
   },
   props: {
-    userName: {
-      type: String,
-    },
-    userAvatar: {
-      type: String,
-    },
+    user: Object as PropType<user>,
   },
   setup() {
-    const menu = ref(false);
+    const nuxtApp = useNuxtApp();
+    const menu = ref(true);
 
     const toggleMenu = (e: Event) => {
       if (!e) return;
@@ -31,30 +49,15 @@ export default defineComponent({
       menu.value = false;
     };
 
-    return { menu, toggleMenu, closeMenu };
+    const signOut = () => {
+      nuxtApp.signOut();
+      closeMenu();
+    };
+
+    return { menu, toggleMenu, closeMenu, signOut };
   },
 });
 </script>
-
-<template>
-  <div class="wrapper">
-    <div class="navigationBar">
-      <NuxtLink to="./">
-        <div class="logo"></div>
-      </NuxtLink>
-      <Avatar
-        v-if="userName || userAvatar"
-        :src="userAvatar"
-        @click="toggleMenu"
-        :name="userName"
-      />
-    </div>
-
-    <Modal v-if="menu" @close="closeMenu">
-      <slot name="menu" />
-    </Modal>
-  </div>
-</template>
 
 <style scoped lang="scss">
 .wrapper {

@@ -1,8 +1,7 @@
 <template>
-  <NavigationBar
-    :userName="user?.fullName"
-    :userAvatar="user?.photoMetaData.MEDIUM"
-  />
+  <NavigationBar :user="user">
+    <template #menu> </template>
+  </NavigationBar>
 
   <Login v-if="!authenticated" />
   <slot v-else />
@@ -15,6 +14,7 @@ import axios from "axios";
 
 export default defineComponent({
   name: "defaultNavigationBar",
+  inheritAttrs: false,
   setup() {
     const nuxtApp = useNuxtApp();
 
@@ -30,12 +30,19 @@ export default defineComponent({
       });
 
     const refreshUser = async () => {
-      const { data } = await nuxtApp.$httpClient("/v1/auth/me");
+      const userString = window.localStorage.getItem("user");
 
-      console.log(data);
+      // Set local user to be equal to the user in local storage
+      if (userString) {
+        nuxtApp.$user.value = JSON.parse(userString);
+        nuxtApp.$authenticated.value = true;
+      }
+
+      // Check with server if user is truly logged in
+      const { data } = await nuxtApp.$httpClient("/v1/auth/me");
+      window.localStorage.setItem("user", JSON.stringify(data));
 
       nuxtApp.$user.value = data;
-      nuxtApp.$authenticated.value = true;
 
       return data;
     };
@@ -51,6 +58,8 @@ export default defineComponent({
     };
 
     const signOut = () => {
+      nuxtApp.$httpClient("/v1/auth/logout");
+      window.localStorage.removeItem("user");
       nuxtApp.$user.value = null;
       nuxtApp.$authenticated.value = false;
     };
@@ -66,17 +75,12 @@ export default defineComponent({
 
     if (!nuxtApp.$signOut) nuxtApp.provide("signOut", signOut);
 
-    onMounted(async () => {
-      const { data } = await nuxtApp.$httpClient("/v1/auth/me");
-      if (data) {
-        nuxtApp.$user.value = data;
-        nuxtApp.$authenticated.value = true;
-      }
-    });
+    onMounted(async () => refreshUser());
 
     return {
       authenticated: nuxtApp.$authenticated as boolean,
       user: nuxtApp.$user as user,
+      signOut,
     };
   },
 });

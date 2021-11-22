@@ -26,8 +26,8 @@ export default defineComponent({
     const nuxtApp = useNuxtApp();
 
     const loading = ref(false);
-    const email = ref("bestuur@pe.nl");
-    const password = ref("webcie");
+    const email = ref("");
+    const password = ref("");
 
     const login = async (e: Event) => {
       if (!e && !loading) return;

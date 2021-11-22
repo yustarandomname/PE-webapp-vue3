@@ -63,6 +63,7 @@ export default defineComponent({
   gap: 0 0.25rem;
   width: var(--width, fit-content);
   margin: var(--margin, 0);
+  cursor: pointer;
 
   & img {
     height: var(--size);
