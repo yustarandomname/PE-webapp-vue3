@@ -23,8 +23,8 @@ export default defineComponent({
   setup() {
     const nuxtApp = useNuxtApp();
 
-    const email = ref("");
-    const password = ref("");
+    const email = ref("bestuur@pe.nl");
+    const password = ref("webcie");
 
     const login = (e: Event) => {
       if (!e) return;

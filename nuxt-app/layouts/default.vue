@@ -8,19 +8,25 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { User } from "../types/user";
-import { $fetch } from 'ohmyfetch';
+import axios from "axios";
 
 export default defineComponent({
   name: "defaultNavigationBar",
   setup() {
     const nuxtApp = useNuxtApp();
-    const user: User = {
-      id: "1",
-      fullname: "Bestuuur",
-      avatar:
-        "https://proteus-eretes.nl/fotodir/12/7619863282148583613195970945632825098817142836418924819294100046_tumb.jpg",
-      url: "https://proteus-eretes.nl/groepen/commissie/id:2",
-    };
+
+    const createClient = () =>
+      axios.create({
+        // baseURL: process.env.VUE_APP_ROOT_API,
+        baseURL: "http://localhost:8000",
+        timeout: 5000,
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+    if (!nuxtApp.$httpclient) nuxtApp.provide("httpClient", createClient());
 
     if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | User>(null));
 
@@ -28,12 +34,12 @@ export default defineComponent({
       nuxtApp.provide("authenticated", ref<boolean>(false));
 
     nuxtApp.provide("signIn", async (email: string, password: string) => {
-      await nuxtApp.$httpClient('/sanctum/csrf-cookie');
-      await nuxtApp.$httpClient('/v1/auth/login', {
-        method: 'POST',
+      await nuxtApp.$httpClient("/sanctum/csrf-cookie");
+      await nuxtApp.$httpClient("/v1/auth/login", {
+        method: "POST",
         data: { email, password },
       });
-      const { data } = await nuxtApp.$httpClient('/v1/auth/me');
+      const { data } = await nuxtApp.$httpClient("/v1/auth/me");
 
       nuxtApp.$user.value = data;
       nuxtApp.$authenticated.value = true;
