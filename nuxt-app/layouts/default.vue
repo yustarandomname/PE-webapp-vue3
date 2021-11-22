@@ -1,5 +1,8 @@
 <template>
-  <NavigationBar :userName="user?.fullname" :userAvatar="user?.avatar" />
+  <NavigationBar
+    :userName="user?.fullName"
+    :userAvatar="user?.photoMetaData.MEDIUM"
+  />
 
   <Login v-if="!authenticated" />
   <slot v-else />
@@ -7,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { User } from "../types/user";
+import { user } from "../types/user";
 import axios from "axios";
 
 export default defineComponent({
@@ -26,9 +29,9 @@ export default defineComponent({
         },
       });
 
-    if (!nuxtApp.$httpclient) nuxtApp.provide("httpClient", createClient());
+    if (!nuxtApp.$httpClient) nuxtApp.provide("httpClient", createClient());
 
-    if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | User>(null));
+    if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | user>(null));
 
     if (!nuxtApp.$authenticated)
       nuxtApp.provide("authenticated", ref<boolean>(false));
@@ -41,8 +44,12 @@ export default defineComponent({
       });
       const { data } = await nuxtApp.$httpClient("/v1/auth/me");
 
+      console.log(data);
+
       nuxtApp.$user.value = data;
       nuxtApp.$authenticated.value = true;
+
+      return data;
     });
 
     nuxtApp.provide("signOut", () => {
@@ -51,8 +58,8 @@ export default defineComponent({
     });
 
     return {
-      authenticated: nuxtApp.$authenticated,
-      user: nuxtApp.$user,
+      authenticated: nuxtApp.$authenticated as boolean,
+      user: nuxtApp.$user as user,
     };
   },
 });
