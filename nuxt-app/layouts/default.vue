@@ -29,19 +29,7 @@ export default defineComponent({
         },
       });
 
-    if (!nuxtApp.$httpClient) nuxtApp.provide("httpClient", createClient());
-
-    if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | user>(null));
-
-    if (!nuxtApp.$authenticated)
-      nuxtApp.provide("authenticated", ref<boolean>(false));
-
-    nuxtApp.provide("signIn", async (email: string, password: string) => {
-      await nuxtApp.$httpClient("/sanctum/csrf-cookie");
-      await nuxtApp.$httpClient("/v1/auth/login", {
-        method: "POST",
-        data: { email, password },
-      });
+    const refreshUser = async () => {
       const { data } = await nuxtApp.$httpClient("/v1/auth/me");
 
       console.log(data);
@@ -50,11 +38,40 @@ export default defineComponent({
       nuxtApp.$authenticated.value = true;
 
       return data;
-    });
+    };
 
-    nuxtApp.provide("signOut", () => {
+    const signIn = async (email: string, password: string) => {
+      await nuxtApp.$httpClient("/sanctum/csrf-cookie");
+      await nuxtApp.$httpClient("/v1/auth/login", {
+        method: "POST",
+        data: { email, password },
+      });
+
+      return refreshUser();
+    };
+
+    const signOut = () => {
       nuxtApp.$user.value = null;
       nuxtApp.$authenticated.value = false;
+    };
+
+    if (!nuxtApp.$httpClient) nuxtApp.provide("httpClient", createClient());
+
+    if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | user>(null));
+
+    if (!nuxtApp.$authenticated)
+      nuxtApp.provide("authenticated", ref<boolean>(false));
+
+    if (!nuxtApp.$signIn) nuxtApp.provide("signIn", signIn);
+
+    if (!nuxtApp.$signOut) nuxtApp.provide("signOut", signOut);
+
+    onMounted(async () => {
+      const { data } = await nuxtApp.$httpClient("/v1/auth/me");
+      if (data) {
+        nuxtApp.$user.value = data;
+        nuxtApp.$authenticated.value = true;
+      }
     });
 
     return {
