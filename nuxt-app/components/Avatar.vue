@@ -1,7 +1,7 @@
 <template>
   <div class="avatar" :class="classes" @click="emitClick">
     <slot>{{ name }}</slot>
-    <img :src="src" :alt="alt" />
+    <img :src="src" :alt="alt" @error="replaceByDefault" />
   </div>
 </template>
 
@@ -44,12 +44,12 @@ export default defineComponent({
       return classObject;
     });
 
-    const emitClick = () => {
-      console.log("click");
-      emit("click");
-    };
+    const replaceByDefault = (e: Event) =>
+      ((e.target as HTMLImageElement).src = defaultSrc);
 
-    return { classes, emitClick };
+    const emitClick = () => emit("click");
+
+    return { classes, emitClick, replaceByDefault };
   },
 });
 </script>
