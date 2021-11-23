@@ -14,7 +14,7 @@ import type { user } from '../types/user';
 
 export default defineComponent({
   name: 'defaultNavigationBar',
-  inheritAttrs: false,
+  inheritAttrs: false, // workaround for nuxt3 (warning) bug
   setup() {
     const nuxtApp = useNuxtApp();
     const loginError = ref<string | undefined>(undefined);
