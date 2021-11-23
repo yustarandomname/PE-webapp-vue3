@@ -3,6 +3,7 @@ import type { Ref } from 'vue';
 import type { NuxtApp } from '#app';
 import axios from 'axios';
 
+// Create axios client with options
 const createClient = () =>
   axios.create({
     // baseURL: process.env.VUE_APP_ROOT_API,
@@ -14,6 +15,7 @@ const createClient = () =>
     },
   });
 
+// Check with local (storage) / remote if user is authenticated
 export const refreshUser = async (
   nuxtApp: NuxtApp
 ): Promise<{
@@ -46,6 +48,9 @@ export const refreshUser = async (
   }
 };
 
+// Create a sign in function which takes an email and password
+// and logs a user in if credentials are correct
+// else return an error
 const createSignIn = (
   nuxtApp: NuxtApp,
   loginError: Ref<string | undefined>
@@ -68,6 +73,7 @@ const createSignIn = (
   };
 };
 
+// Create a sign out function which logs a user out
 const createSignOut = (nuxtApp: NuxtApp) => {
   return async () => {
     await nuxtApp.$httpClient('/v1/auth/logout', {
