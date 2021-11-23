@@ -5,6 +5,7 @@
       <Input size="large" label="email" v-model="email" />
       <Input size="large" label="password" type="password" v-model="password" />
       <Button size="large" :loading="loading" @click="login">Login</Button>
+      <div v-if="error" class="error">{{ error }}</div>
     </form>
   </Modal>
 </template>
@@ -21,6 +22,9 @@ export default defineComponent({
     Modal,
     Input,
     Button,
+  },
+  props: {
+    error: String,
   },
   setup() {
     const nuxtApp = useNuxtApp();
@@ -47,3 +51,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+.error {
+  color: var(--error-color);
+}
+</style>
