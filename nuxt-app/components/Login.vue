@@ -11,13 +11,13 @@
 </template>
 
 <script lang="ts">
-import Modal from "./Modal.vue";
-import Input from "./inputs/Input.vue";
-import Button from "./Button.vue";
-import { defineComponent } from "vue";
+import Modal from './Modal.vue';
+import Input from './inputs/Input.vue';
+import Button from './Button.vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "login",
+  name: 'login',
   components: {
     Modal,
     Input,
@@ -30,11 +30,11 @@ export default defineComponent({
     const nuxtApp = useNuxtApp();
 
     const loading = ref(false);
-    const email = ref("");
-    const password = ref("");
+    const email = ref('');
+    const password = ref('');
 
     const login = async (e: Event) => {
-      if (!e && !loading) return;
+      if (!e || e.type != 'submit' || !loading) return;
 
       loading.value = true;
       await nuxtApp.$signIn(email.value, password.value);
@@ -55,5 +55,8 @@ export default defineComponent({
 <style lang="scss">
 .error {
   color: var(--error-color);
+  font-size: var(--small);
+  margin-top: var(--margin-tiny);
+  text-align: right;
 }
 </style>

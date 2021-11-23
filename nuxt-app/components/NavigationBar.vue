@@ -20,14 +20,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType } from "vue";
-import type { user } from "../types/user";
+import { defineComponent, ref, PropType } from 'vue';
+import type { user } from '../types/user';
 
-import Avatar from "./Avatar.vue";
-import Modal from ".//Modal.vue";
+import Avatar from './Avatar.vue';
+import Modal from './/Modal.vue';
 
 export default defineComponent({
-  name: "NavigationBar",
+  name: 'NavigationBar',
   components: {
     Avatar,
     Modal,
@@ -49,7 +49,9 @@ export default defineComponent({
       menu.value = false;
     };
 
-    const signOut = () => {
+    const signOut = (e: Event) => {
+      if (!e) return;
+
       nuxtApp.$signOut();
       closeMenu();
     };
