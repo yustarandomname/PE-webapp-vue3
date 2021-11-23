@@ -37,7 +37,7 @@ export default defineComponent({
   },
   setup() {
     const nuxtApp = useNuxtApp();
-    const menu = ref(true);
+    const menu = ref(false);
 
     const toggleMenu = (e: Event) => {
       if (!e) return;
@@ -50,7 +50,7 @@ export default defineComponent({
     };
 
     const signOut = () => {
-      nuxtApp.signOut();
+      nuxtApp.$signOut();
       closeMenu();
     };
 
