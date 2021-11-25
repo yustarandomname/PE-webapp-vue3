@@ -1,9 +1,9 @@
-import { User } from "./user";
+import { user } from "./user";
 
 // A comment on a certain post
 export interface Comment {
   id: number;
-  user: User;
+  user: user;
   likes: number;
   content: string;
 }
@@ -16,7 +16,7 @@ export interface Card {
   content?: string;
   images?: string[];
   image: string;
-  postedBy: User;
+  postedBy: user;
   comments: Comment[];
   likes: number;
   categories: string[];

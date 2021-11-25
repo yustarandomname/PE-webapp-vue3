@@ -1,39 +1,3 @@
-<script lang="ts">
-import { defineComponent, ref } from "vue";
-
-import Avatar from "./Avatar.vue";
-import Modal from ".//Modal.vue";
-
-export default defineComponent({
-  name: "NavigationBar",
-  components: {
-    Avatar,
-    Modal,
-  },
-  props: {
-    userName: {
-      type: String,
-    },
-    userAvatar: {
-      type: String,
-    },
-  },
-  setup() {
-    const menu = ref(false);
-
-    const toggleMenu = () => {
-      menu.value = !menu.value;
-    };
-
-    const closeMenu = () => {
-      menu.value = false;
-    };
-
-    return { menu, toggleMenu, closeMenu };
-  },
-});
-</script>
-
 <template>
   <div class="wrapper">
     <div class="navigationBar">
@@ -41,18 +5,61 @@ export default defineComponent({
         <div class="logo"></div>
       </NuxtLink>
       <Avatar
-        v-if="userName || userAvatar"
-        :src="userAvatar"
+        v-if="user?.fullName || user?.photoMetaData.MEDIUM"
+        :src="user.photoMetaData.MEDIUM"
         @click="toggleMenu"
-        >{{ userName }}</Avatar
-      >
+        :name="user.fullName"
+      />
     </div>
 
     <Modal v-if="menu" @close="closeMenu">
-      <slot name="menu" />
+      <template #header> Header </template>
+      <Button size="large" @click="signOut"> signOut</Button>
     </Modal>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent, ref, PropType } from 'vue';
+import type { user } from '../types/user';
+
+import Avatar from './Avatar.vue';
+import Modal from './/Modal.vue';
+
+export default defineComponent({
+  name: 'NavigationBar',
+  components: {
+    Avatar,
+    Modal,
+  },
+  props: {
+    user: Object as PropType<user>,
+  },
+  setup() {
+    const nuxtApp = useNuxtApp();
+    const menu = ref(false);
+
+    const toggleMenu = (e: Event) => {
+      if (!e) return;
+
+      menu.value = !menu.value;
+    };
+
+    const closeMenu = () => {
+      menu.value = false;
+    };
+
+    const signOut = (e: Event) => {
+      if (!e) return;
+
+      nuxtApp.$signOut();
+      closeMenu();
+    };
+
+    return { menu, toggleMenu, closeMenu, signOut };
+  },
+});
+</script>
 
 <style scoped lang="scss">
 .wrapper {
@@ -71,11 +78,12 @@ export default defineComponent({
   padding: var(--padding-ver) var(--padding-hor);
   top: 0;
   left: 0;
-  background: #ffffff6e;
+  background: #ffffffab;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 101;
+  backdrop-filter: blur(7px) saturate(2);
 
   & > a {
     width: 100%;

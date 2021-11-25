@@ -1,44 +1,32 @@
 <template>
-  <NavigationBar :userName="user?.fullname" :userAvatar="user?.avatar" />
+  <NavigationBar :user="user">
+    <template #menu> </template>
+  </NavigationBar>
 
-  <Login v-if="!authenticated" />
+  <Login v-if="!authenticated" :error="loginError" />
   <slot v-else />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { User } from "../types/user";
+import { defineComponent, ref } from 'vue';
+import { setupAuth, refreshUser } from './../util/authentication';
+import type { user } from '../types/user';
 
 export default defineComponent({
-  name: "defaultNavigationBar",
+  name: 'defaultNavigationBar',
+  inheritAttrs: false, // workaround for nuxt3 (warning) bug
   setup() {
     const nuxtApp = useNuxtApp();
-    const user: User = {
-      id: "1",
-      fullname: "Bestuuur",
-      avatar:
-        "https://proteus-eretes.nl/fotodir/12/7619863282148583613195970945632825098817142836418924819294100046_tumb.jpg",
-      url: "https://proteus-eretes.nl/groepen/commissie/id:2",
-    };
+    const loginError = ref<string | undefined>(undefined);
 
-    if (!nuxtApp.$user) nuxtApp.provide("user", ref<null | User>(user));
+    setupAuth(nuxtApp, loginError);
 
-    if (!nuxtApp.$authenticated)
-      nuxtApp.provide("authenticated", ref<boolean>(false));
-
-    nuxtApp.provide("signIn", (email: string, password: string) => {
-      nuxtApp.$user.value = user;
-      nuxtApp.$authenticated.value = true;
-    });
-
-    nuxtApp.provide("signOut", () => {
-      nuxtApp.$user.value = null;
-      nuxtApp.$authenticated.value = false;
-    });
+    onMounted(async () => refreshUser(nuxtApp));
 
     return {
-      authenticated: nuxtApp.$authenticated,
-      user: nuxtApp.$user,
+      authenticated: nuxtApp.$authenticated as boolean,
+      user: nuxtApp.$user as user,
+      loginError,
     };
   },
 });

@@ -41,7 +41,7 @@ export default defineComponent({
     left: 50%;
     transform: translate(-50%, -50%);
     width: var(--width, var(--width-medium));
-    min-height: 20rem;
+    min-height: 15rem;
     max-width: 90vw;
     background-color: var(--white-color);
     border-radius: var(--corner-radius-large);
@@ -58,10 +58,9 @@ export default defineComponent({
       gap: 0.75rem;
       height: 2rem;
     }
-    
+
     & .content {
       max-height: calc(90vh - 15rem);
-      overflow-y: auto;
     }
   }
 }

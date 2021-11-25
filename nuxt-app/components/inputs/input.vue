@@ -133,9 +133,18 @@ export default defineComponent({
   color: transparent;
 }
 .input {
-  margin-top: var(--margin-small);
+  margin: var(--margin-large) 0;
   width: 20rem;
   max-width: var(--max-width);
+
+  & ~ .input {
+    margin-top: var(--margin-huge);
+  }
+
+  &.size-large {
+    width: 100%;
+  }
+
   & label {
     position: relative;
     background: var(--grey-color-200);

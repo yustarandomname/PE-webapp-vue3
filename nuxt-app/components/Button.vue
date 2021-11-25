@@ -112,17 +112,21 @@ button {
     width: 100%;
     min-width: unset;
   }
+
+  &:hover {
+    transform: scale(1.05);
+
+    &.size-tiny {
+      transform: scale(1.1);
+    }
+  }
 }
 
-/* STATE */
+/* DISABLED */
 button.state-disabled,
 button.disabled {
   --bg: var(--grey-color-200);
   --color: var(--grey-color-500);
   cursor: not-allowed !important;
-}
-
-button.size-tiny:hover {
-  transform: scale(1.1);
 }
 </style>

@@ -84,7 +84,7 @@ export default defineComponent({
       </div>
 
       <Avatar v-if="postedBy" :src="postedBy.avatar">
-        <a :href="postedBy.url" target="_blank">{{ postedBy.name }}</a>
+        <a :href="postedBy.url" target="_blank">{{ postedBy.fullname }}</a>
       </Avatar>
     </div>
   </div>
