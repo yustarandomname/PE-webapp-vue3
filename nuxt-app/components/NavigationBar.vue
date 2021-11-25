@@ -5,8 +5,8 @@
         <div class="logo"></div>
       </NuxtLink>
       <Avatar
-        v-if="user?.fullName || user?.photoMetaData.MEDIUM"
-        :src="user.photoMetaData.MEDIUM"
+        v-if="user?.fullName || user?.photoMetaData"
+        :src="user.getPhotoUrl()"
         @click="toggleMenu"
         :name="user.fullName"
       />
@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue';
-import type { user } from '../types/user';
+import { User } from './../models/user';
 
 import Avatar from './Avatar.vue';
 import Modal from './/Modal.vue';
@@ -33,7 +33,7 @@ export default defineComponent({
     Modal,
   },
   props: {
-    user: Object as PropType<user>,
+    user: Object as PropType<User>,
   },
   setup() {
     const nuxtApp = useNuxtApp();

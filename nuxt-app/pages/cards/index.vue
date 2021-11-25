@@ -1,6 +1,6 @@
 <template>
   <div class="openCardWrapper">
-    <BlogOpen @clickBackToNews="goHome" :card="card" />
+    <BlogOpen @clickBackToNews="goHome" :blog="blog" />
   </div>
 </template>
 
@@ -8,8 +8,7 @@
 import BlogOpen from './../../components/cards/BlogOpen.vue';
 
 import { defineComponent } from 'vue';
-import { loadBlog } from './../../util/blogs';
-import type { Card } from './../../types/card';
+import { Blog } from './../../models/posts/blogs';
 
 export default defineComponent({
   name: 'cards',
@@ -21,7 +20,7 @@ export default defineComponent({
 
     const goHome = () => nuxtApp.$router.push('/');
 
-    const card = ref<Card>();
+    const blog = ref<Blog>();
 
     onMounted(async () => {
       const id: number | undefined = parseInt(
@@ -33,11 +32,11 @@ export default defineComponent({
         return;
       }
 
-      card.value = await loadBlog(nuxtApp, id);
+      blog.value = await Blog.fetchBlog(nuxtApp, id);
     });
 
     return {
-      card,
+      blog,
       goHome,
     };
   },

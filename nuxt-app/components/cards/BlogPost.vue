@@ -1,13 +1,13 @@
 <template>
   <div
     class="blogCard"
-    :class="{ loading: !card, noImage: !card?.photoMetaData?.ORIGINAL }"
+    :class="{ loading: !blog, noImage: !blog?.photoMetaData?.ORIGINAL }"
     @click="$emit('click')"
   >
-    <div class="header">{{ card?.title }}</div>
-    <div class="datePosted">{{ datePosted }}</div>
-    <div class="content" :class="{ loadingContent: !card?.content }">
-      {{ card?.content }}
+    <div class="header">{{ blog?.title }}</div>
+    <div class="datePosted">{{ blog?.datePosted }}</div>
+    <div class="content" :class="{ loadingContent: !blog?.content }">
+      {{ blog?.content }}
     </div>
 
     <div class="image" :style="imageStyles"></div>
@@ -18,11 +18,11 @@
       </div>
 
       <Avatar
-        v-if="card?.poster && card.posterType == 'user'"
-        :src="card?.poster.photoMetaData?.MEDIUM"
+        v-if="blog?.poster && blog.posterType == 'user'"
+        :src="blog?.poster.getPhotoUrl()"
       >
-        <NuxtLink :to="'./users?id=' + card?.poster.userId" target="_blank">{{
-          card?.poster.fullName
+        <NuxtLink :to="'./users?id=' + blog?.poster.userId" target="_blank">{{
+          blog?.poster.fullName
         }}</NuxtLink>
       </Avatar>
     </div>
@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue';
-import { Card } from './../../types/card';
+import { Blog } from './../../models/posts/blogs';
 import Avatar from '../Avatar.vue';
 
 export default defineComponent({
@@ -40,27 +40,23 @@ export default defineComponent({
     Avatar,
   },
   props: {
-    card: Object as PropType<Card>,
+    blog: Object as PropType<Blog>,
   },
   setup(props) {
     const imageStyles = computed(() => {
-      if (!props.card) return { background: 'var(--grey-color-200)' };
-      if (!props.card?.photoMetaData?.ORIGINAL) return;
+      if (!props.blog) return { background: 'var(--grey-color-200)' };
+      if (!props.blog.photoMetaData) return;
 
-      return { background: `url(${props.card?.photoMetaData?.ORIGINAL})` };
+      console.log(props.blog.photoMetaData);
+      return { background: `url(${props.blog.getPhotoUrl()})` };
     });
 
     const categoryList = computed(() => {
-      if (!props.card?.category) return;
-      return [props.card.category];
+      if (!props.blog?.category) return;
+      return [props.blog.category];
     });
 
-    const datePosted = computed(() => {
-      if (!props.card?.createdAt) return;
-      return new Date(props.card.createdAt).toLocaleDateString();
-    });
-
-    return { imageStyles, categoryList, datePosted };
+    return { imageStyles, categoryList };
   },
 });
 </script>

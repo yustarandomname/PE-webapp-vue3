@@ -14,21 +14,22 @@
 
     <section
       class="image"
-      v-if="card?.photoMetaData?.ORIGINAL"
-      :style="'background: url(' + card?.photoMetaData?.ORIGINAL + ')'"
+      v-if="blog?.photoMetaData"
+      :style="'background: url(' + blog?.getPhotoUrl() + ')'"
     />
 
     <section class="content">
       <div class="titles">
         <div>
-          <div class="header">{{ card?.title }}</div>
+          <div class="header">{{ blog?.title }}</div>
           <div class="date">{{ datePosted }}</div>
         </div>
-        <Avatar :src="card?.poster.photoMetaData?.MEDIUM">{{
-          card?.poster.fullName
-        }}</Avatar>
+        <Avatar
+          :src="blog?.poster.getPhotoUrl()"
+          :name="blog?.poster.fullName"
+        />
       </div>
-      {{ card?.content }}
+      {{ blog?.content }}
     </section>
 
     <section class="comments">
@@ -36,7 +37,7 @@
       <div class="comment" v-for="comment in comments">
         <div>
           {{ comment.content }}
-          <div class="author">{{ comment.user.fullname }}</div>
+          <div class="author">{{ comment.user.fullName }}</div>
         </div>
         <div class="actions">
           <Button size="tiny" icon="celebration"> {{ comment.likes }}</Button>
@@ -78,7 +79,7 @@ import { defineComponent, PropType } from 'vue';
 import Avatar from './../Avatar.vue';
 import Button from './../Button.vue';
 import Textarea from './../inputs/Textarea.vue';
-import type { Card as CardType } from './../../types/card';
+import { Blog } from './../../models/posts/blogs';
 
 export default defineComponent({
   name: 'BlogOpen',
@@ -88,8 +89,8 @@ export default defineComponent({
     Textarea,
   },
   props: {
-    card: {
-      type: Object as PropType<CardType>,
+    blog: {
+      type: Object as PropType<Blog>,
     },
   },
   setup(props, { emit }) {
@@ -98,20 +99,20 @@ export default defineComponent({
     const edit = () => emit('clickEdit');
 
     const canShare = ref(false);
-    const comments = ref(props.card?.comments || []);
+    const comments = ref(props.blog?.comments || []);
     const newComment = ref('');
 
     const datePosted = computed(() => {
-      if (!props.card?.createdAt) return '';
-      return new Date(props.card.createdAt).toLocaleDateString();
+      if (!props.blog?.createdAt) return '';
+      return new Date(props.blog.createdAt).toLocaleDateString();
     });
 
     const share = async (e: Event) => {
       if (!e || !navigator || !navigator.share) return;
 
       const shareData = {
-        title: props.card?.title,
-        text: props.card?.content,
+        title: props.blog?.title,
+        text: props.blog?.content,
         url: 'localhost:8000',
       };
 
@@ -134,10 +135,10 @@ export default defineComponent({
     };
 
     const likes = computed(() => {
-      if (!props.card) return 'like';
-      if (props.card.likedBy.length == 1)
-        return props.card.likedBy.length + ' like';
-      return props.card.likedBy.length + ' likes';
+      if (!props.blog) return 'like';
+      if (props.blog.likedBy.length == 1)
+        return props.blog.likedBy.length + ' like';
+      return props.blog.likedBy.length + ' likes';
     });
 
     onMounted(() => {

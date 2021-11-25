@@ -1,17 +1,17 @@
 <template>
   <div>
     <InfiniteList @fetch="fetchItems" :autoLoad="true">
-      <template #default="card">
-        <Blog :card="card.item" @click="openCard(card.item)" />
+      <template #default="post">
+        <BlogPost :blog="post" @click="openPost(post)" />
       </template>
 
       <template #loading>
-        <Blog v-bind="loadingCard" />
+        <BlogPost />
       </template>
     </InfiniteList>
 
-    <div v-if="openedCard" class="openCardWrapper">
-      <BlogOpen :card="openedCard" @clickBackToNews="backToNewsfeed" />
+    <div v-if="openedPost" class="openCardWrapper">
+      <BlogOpen :blog="openedPost" @clickBackToNews="backToNewsfeed" />
     </div>
   </div>
 </template>
@@ -20,38 +20,36 @@
 import Avatar from '@/components/Avatar.vue';
 import Button from '@/components/Button.vue';
 import InfiniteList from '@/components/InfiniteList.vue';
-import Blog from '@/components/cards/Blog.vue';
 import BlogOpen from '@/components/cards/BlogOpen.vue';
-
-import type { Card } from '../types/card';
+import BlogPost from '@/components/cards/BlogPost.vue';
 
 import { Ref, defineComponent, onMounted, onBeforeUnmount } from 'vue';
-import { loadBlogs } from './../util/blogs';
-import { loadingCard } from './../util/getRandomParagraph';
+import { Post } from '../models/posts/post';
+import { Blogs } from './../models/posts/blogs';
 
 export default defineComponent({
-  components: { Avatar, Button, InfiniteList, Blog, BlogOpen },
+  components: { Avatar, Button, InfiniteList, BlogPost, BlogOpen },
 
   setup() {
     const nuxtApp = useNuxtApp();
-    const openedCard: Ref<Card | null> = ref(null);
+    const openedPost = ref<Post>();
 
-    const fetchItems = async (list: Ref<Card[]>, amount: number) => {
-      const newCards = await loadBlogs(nuxtApp);
+    const fetchItems = async (list: Ref<Post[]>, amount: number) => {
+      const newCards = await Blogs.fetchBlogs(nuxtApp);
 
-      list.value = [...list.value, ...newCards];
+      list.value = list.value.concat(newCards.posts);
     };
 
     // HANDLE OPEN / CLOSE BLOG POST
-    const openCard = (card: Card) => {
-      openedCard.value = card;
+    const openPost = (post: Post) => {
+      openedPost.value = post;
 
-      const nextURL = `?id=${card.id}`;
+      const nextURL = `?id=${post.id}`;
       nuxtApp.$router.push(nextURL);
     };
 
     const backToNewsfeed = () => {
-      openedCard.value = null;
+      openedPost.value = undefined;
       nuxtApp.$router.push('/');
     };
 
@@ -64,7 +62,7 @@ export default defineComponent({
 
       window.addEventListener('popstate', (e: PopStateEvent) => {
         if (e.state.current == '/') {
-          openedCard.value = null;
+          openedPost.value = undefined;
         }
       });
     });
@@ -73,7 +71,7 @@ export default defineComponent({
       window.removeEventListener('popstate', () => {});
     });
 
-    return { fetchItems, openedCard, openCard, backToNewsfeed, loadingCard };
+    return { fetchItems, openedPost, openPost, backToNewsfeed };
   },
 });
 </script>

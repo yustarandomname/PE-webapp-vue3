@@ -1,9 +1,29 @@
+<template>
+  <div class="list">
+    <div v-if="title" class="title">{{ title }}</div>
+
+    <section v-for="(post, index) in list" :key="index" class="card">
+      <slot v-bind="post"> {{ post }}</slot>
+    </section>
+
+    <section v-for="item in new Array(loading)" :key="item" class="card">
+      <slot name="loading" />
+    </section>
+
+    <div class="loadMore">
+      <Button @click="loadMore" :loading="!!loading">Meer laden</Button>
+    </div>
+  </div>
+</template>
+
 <script lang="ts">
-import { defineComponent, ref, Ref, watch, onMounted } from "vue";
-import Button from "./Button.vue";
+import { defineComponent, ref, Ref, watch, onMounted } from 'vue';
+import { Post } from '../models/posts/post';
+
+import Button from './Button.vue';
 
 export default defineComponent({
-  name: "InfiniteList",
+  name: 'InfiniteList',
   components: {
     Button,
   },
@@ -29,7 +49,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const list: Ref<any[]> = ref([]);
+    const list: Ref<Post[]> = ref([]);
     const loading = ref(props.initCount);
 
     watch(list, () => {
@@ -38,14 +58,14 @@ export default defineComponent({
 
     const loadMore = () => {
       loading.value = props.pageCount;
-      emit("fetch", list, props.pageCount);
+      emit('fetch', list, props.pageCount);
     };
 
     onMounted(async () => {
-      emit("fetch", list, props.initCount);
+      emit('fetch', list, props.initCount);
 
       if (props.autoLoad) {
-        window.addEventListener("scroll", () => {
+        window.addEventListener('scroll', () => {
           if (!!loading.value) return;
           const scrollTop = window.innerHeight + window.scrollY;
           const height = document.body.offsetHeight;
@@ -61,24 +81,6 @@ export default defineComponent({
   },
 });
 </script>
-
-<template>
-  <div class="list">
-    <div v-if="title" class="title">{{ title }}</div>
-
-    <section v-for="(item, index) in list" :key="index" class="card">
-      <slot v-bind:item="item"> {{ item }}</slot>
-    </section>
-
-    <section v-for="item in new Array(loading)" :key="item" class="card">
-      <slot name="loading" />
-    </section>
-
-    <div class="loadMore">
-      <Button @click="loadMore" :loading="!!loading">Meer laden</Button>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .list {

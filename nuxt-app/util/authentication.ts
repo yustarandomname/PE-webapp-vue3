@@ -1,6 +1,6 @@
-import type { user } from './../types/user';
-import type { Ref } from 'vue';
 import type { NuxtApp } from '#app';
+import type { Ref } from 'vue';
+import { User, UserInterface } from './../models/user';
 import axios from 'axios';
 
 // Create axios client with options
@@ -19,7 +19,7 @@ const createClient = () =>
 export const refreshUser = async (
   nuxtApp: NuxtApp
 ): Promise<{
-  user?: user;
+  user?: UserInterface;
   error?: Error;
 }> => {
   const { $user, $authenticated, $httpClient } = nuxtApp;
@@ -33,16 +33,16 @@ export const refreshUser = async (
 
   try {
     // Check with server if user is truly logged in
-    const res = await $httpClient('/v1/auth/me');
+    const { data } = await $httpClient('/v1/auth/me');
 
-    if (!res) return { error: Error('No response from server') };
+    if (!data) return { error: Error('No response from server') };
 
-    window.localStorage.setItem('user', JSON.stringify(res.data));
+    window.localStorage.setItem('user', JSON.stringify(data as UserInterface));
 
-    $user.value = res.data as user;
+    $user.value = new User(data as UserInterface); // TODO
     $authenticated.value = true;
 
-    return { user: res.data };
+    return { user: data as UserInterface };
   } catch (error) {
     return { error: new Error('Gebruiker is niet ingelogd') };
   }
@@ -94,7 +94,7 @@ export const setupAuth = (
 ) => {
   if (!nuxtApp.$httpClient) nuxtApp.provide('httpClient', createClient());
 
-  if (!nuxtApp.$user) nuxtApp.provide('user', ref<null | user>(null));
+  if (!nuxtApp.$user) nuxtApp.provide('user', ref<User>());
 
   if (!nuxtApp.$authenticated)
     nuxtApp.provide('authenticated', ref<boolean>(false));
