@@ -1,4 +1,4 @@
-import { user } from "./user";
+import { user } from './user';
 
 // A comment on a certain post
 export interface Comment {
@@ -8,16 +8,29 @@ export interface Comment {
   content: string;
 }
 
+export interface Poster {
+  userId: number;
+  fullName: string;
+  photoMetaData: {
+    MEDIUM: string;
+    ORIGINAL: string;
+  };
+}
+
 // A card can be a blogpost, poll, photos etc.
 export interface Card {
   id: string;
-  header: string;
-  datePosted: string;
-  content?: string;
-  images?: string[];
-  image: string;
-  postedBy: user;
+  title: string;
+  poster: Poster;
+  content: string;
+  posterType: 'user' | 'group';
+  category: { id: number; name: string };
   comments: Comment[];
-  likes: number;
-  categories: string[];
+  likedBy: user[];
+  photoMetaData: {
+    MEDIUM: string;
+    ORIGINAL: string;
+  };
+  createdAt: string;
+  updatedAt: string;
 }

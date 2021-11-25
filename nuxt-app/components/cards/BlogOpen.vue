@@ -14,18 +14,18 @@
 
     <section
       class="image"
-      v-if="card?.image"
-      :style="'background: url(' + card?.image + ')'"
+      v-if="card?.photoMetaData?.ORIGINAL"
+      :style="'background: url(' + card?.photoMetaData?.ORIGINAL + ')'"
     />
 
     <section class="content">
       <div class="titles">
         <div>
-          <div class="header">{{ card?.header }}</div>
-          <div class="date">{{ card?.datePosted }}</div>
+          <div class="header">{{ card?.title }}</div>
+          <div class="date">{{ datePosted }}</div>
         </div>
-        <Avatar :src="card?.postedBy.avatar">{{
-          card?.postedBy.fullname
+        <Avatar :src="card?.poster.photoMetaData?.MEDIUM">{{
+          card?.poster.fullName
         }}</Avatar>
       </div>
       {{ card?.content }}
@@ -74,14 +74,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import Avatar from "./../Avatar.vue";
-import Button from "./../Button.vue";
-import Textarea from "./../inputs/Textarea.vue";
-import type { Card as CardType } from "./../../types/card";
+import { defineComponent, PropType } from 'vue';
+import Avatar from './../Avatar.vue';
+import Button from './../Button.vue';
+import Textarea from './../inputs/Textarea.vue';
+import type { Card as CardType } from './../../types/card';
 
 export default defineComponent({
-  name: "BlogOpen",
+  name: 'BlogOpen',
   components: {
     Avatar,
     Button,
@@ -94,25 +94,30 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { $user } = useNuxtApp();
-    const backToNewsfeed = () => emit("clickBackToNews");
-    const edit = () => emit("clickEdit");
+    const backToNewsfeed = () => emit('clickBackToNews');
+    const edit = () => emit('clickEdit');
 
     const canShare = ref(false);
     const comments = ref(props.card?.comments || []);
-    const newComment = ref("");
+    const newComment = ref('');
+
+    const datePosted = computed(() => {
+      if (!props.card?.createdAt) return '';
+      return new Date(props.card.createdAt).toLocaleDateString();
+    });
 
     const share = async (e: Event) => {
       if (!e || !navigator || !navigator.share) return;
 
       const shareData = {
-        title: props.card?.header,
+        title: props.card?.title,
         text: props.card?.content,
-        url: "localhost:8000",
+        url: 'localhost:8000',
       };
 
       (await navigator?.share) && navigator.share(shareData);
     };
-    const like = () => console.log("like");
+    const like = () => console.log('like');
     const comment = (e: Event) => {
       console.log(newComment.value);
       if (!e || !newComment.value) return; // if no comment content -> no comment
@@ -125,13 +130,14 @@ export default defineComponent({
       };
 
       comments.value.push(newCommentObj);
-      newComment.value = "";
+      newComment.value = '';
     };
 
     const likes = computed(() => {
-      if (!props.card) return "like";
-      if (props.card.likes == 1) return props.card.likes + " like";
-      return props.card.likes + " likes";
+      if (!props.card) return 'like';
+      if (props.card.likedBy.length == 1)
+        return props.card.likedBy.length + ' like';
+      return props.card.likedBy.length + ' likes';
     });
 
     onMounted(() => {
@@ -140,6 +146,7 @@ export default defineComponent({
 
     return {
       backToNewsfeed,
+      datePosted,
       edit,
       like,
       likes,

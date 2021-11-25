@@ -1,94 +1,69 @@
-<script lang="ts">
-import { defineComponent, PropType, computed } from "vue";
-import Avatar from "../Avatar.vue";
-
-interface User {
-  name: string;
-  avatar: string;
-  url: string;
-}
-
-export default defineComponent({
-  name: "BlogCard",
-  components: {
-    Avatar,
-  },
-  props: {
-    id: {
-      type: String as PropType<string>,
-      required: true,
-    },
-    header: {
-      type: String as PropType<string>,
-      required: true,
-    },
-    datePosted: {
-      type: String as PropType<string>,
-      default: new Date().toLocaleDateString(),
-    },
-    content: String as PropType<string>,
-    image: {
-      type: String as PropType<string>,
-      default: "loading",
-    },
-    postedBy: Object as PropType<User>,
-    categories: Array as PropType<string[]>,
-  },
-  setup(props) {
-    const MAX_CATEGORIES_LENGTH = 1;
-
-    const imageStyles = computed(() => {
-      if (!props.image) return;
-      if (props.image == "loading")
-        return { background: "var(--grey-color-200)" };
-      return { background: `url(${props.image})` };
-    });
-
-    const loadingFooter = computed(() => {
-      return { loadingFooter: props.image == "loading" };
-    });
-
-    const categoryList = computed(() => {
-      if (!props.categories) return;
-      if (props.categories.length < MAX_CATEGORIES_LENGTH)
-        return props.categories;
-      return props.categories.slice(0, MAX_CATEGORIES_LENGTH);
-    });
-
-    const moreCategories = computed(() => {
-      if (!props.categories) return 0;
-      return props.categories.length - MAX_CATEGORIES_LENGTH;
-    });
-
-    return { imageStyles, loadingFooter, categoryList, moreCategories };
-  },
-});
-</script>
-
 <template>
-  <div class="blogCard" :class="{ noImage: !image }" @click="$emit('click')">
-    <div class="header">{{ header }}</div>
+  <div
+    class="blogCard"
+    :class="{ loading: !card, noImage: !card?.photoMetaData?.ORIGINAL }"
+    @click="$emit('click')"
+  >
+    <div class="header">{{ card?.title }}</div>
     <div class="datePosted">{{ datePosted }}</div>
-    <div class="content" :class="{ loadingContent: !content }">
-      {{ content }}
+    <div class="content" :class="{ loadingContent: !card?.content }">
+      {{ card?.content }}
     </div>
 
     <div class="image" :style="imageStyles"></div>
 
-    <div class="footer" :class="loadingFooter">
-      <div class="category" v-for="category in categoryList" :key="category">
-        {{ category }}
-      </div>
-      <div v-if="moreCategories > 0" class="category">
-        + {{ moreCategories }}
+    <div class="footer">
+      <div class="category" v-for="category in categoryList" :key="category.id">
+        {{ category.name }}
       </div>
 
-      <Avatar v-if="postedBy" :src="postedBy.avatar">
-        <a :href="postedBy.url" target="_blank">{{ postedBy.fullname }}</a>
+      <Avatar
+        v-if="card?.poster && card.posterType == 'user'"
+        :src="card?.poster.photoMetaData?.MEDIUM"
+      >
+        <NuxtLink :to="'./users?id=' + card?.poster.userId" target="_blank">{{
+          card?.poster.fullName
+        }}</NuxtLink>
       </Avatar>
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent, PropType, computed } from 'vue';
+import { Card } from './../../types/card';
+import Avatar from '../Avatar.vue';
+
+export default defineComponent({
+  name: 'BlogCard',
+  components: {
+    Avatar,
+  },
+  props: {
+    card: Object as PropType<Card>,
+  },
+  setup(props) {
+    const imageStyles = computed(() => {
+      if (!props.card) return { background: 'var(--grey-color-200)' };
+      if (!props.card?.photoMetaData?.ORIGINAL) return;
+
+      return { background: `url(${props.card?.photoMetaData?.ORIGINAL})` };
+    });
+
+    const categoryList = computed(() => {
+      if (!props.card?.category) return;
+      return [props.card.category];
+    });
+
+    const datePosted = computed(() => {
+      if (!props.card?.createdAt) return;
+      return new Date(props.card.createdAt).toLocaleDateString();
+    });
+
+    return { imageStyles, categoryList, datePosted };
+  },
+});
+</script>
 
 <style scoped lang="scss">
 .blogCard {
@@ -100,7 +75,7 @@ export default defineComponent({
   display: grid;
   gap: var(--margin-tiny) var(--vertical-gap);
   grid-template-columns: var(--grid-columns) var(--grid-columns);
-  grid-template-areas: "header header" "datePosted image" "content image" "footer footer";
+  grid-template-areas: 'header header' 'datePosted image' 'content image' 'footer footer';
 
   & .header {
     grid-area: header;
@@ -171,7 +146,7 @@ export default defineComponent({
   }
 
   &.noImage {
-    grid-template-areas: "header header" "datePosted datePosted" "content content" "footer footer";
+    grid-template-areas: 'header header' 'datePosted datePosted' 'content content' 'footer footer';
 
     & .image {
       display: none;
@@ -185,7 +160,7 @@ export default defineComponent({
 
 @media screen and (max-width: 40rem) {
   .blogCard {
-    grid-template-areas: "header header" "datePosted datePosted" "image image" "content content" "footer footer" !important;
+    grid-template-areas: 'header header' 'datePosted datePosted' 'image image' 'content content' 'footer footer' !important;
 
     & .image {
       min-height: 15rem;
