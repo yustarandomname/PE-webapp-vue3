@@ -5,7 +5,7 @@
         size="small"
         state="primary"
         icon="arrow_back"
-        @click="backToNewsfeed"
+        @click="$emit('clickBackToNews')"
       >
         Terug naar nieuwsfeed
       </Button>
@@ -13,7 +13,7 @@
         v-if="User.isOwner(blog?.poster.userId)"
         size="small"
         icon="edit"
-        @click="edit"
+        @click="$emit('clickEdit')"
         >Aanpassen</Button
       >
     </section>
@@ -28,7 +28,7 @@
       <div class="titles">
         <div>
           <div class="header">{{ blog?.title }}</div>
-          <div class="date">{{ datePosted }}</div>
+          <div class="date">{{ blog?.datePosted }}</div>
         </div>
         <Avatar
           :src="blog?.poster.getPhotoUrl()"
@@ -40,7 +40,7 @@
 
     <section class="comments">
       <div class="commentTitle">Reageersels</div>
-      <div class="comment" v-for="comment in comments">
+      <div class="comment" v-for="comment in blog?.comments || []">
         <div>
           {{ comment.comment }}
           <div class="author">{{ comment.poster.firstName }}</div>
@@ -91,7 +91,6 @@
 <script lang="ts">
 import { NuxtApp } from '../../models/nuxtApp';
 import { User } from './../../models/user';
-import { Comment } from './../../models/posts/comment';
 import { Blog } from './../../models/posts/blogs';
 
 import { defineComponent, PropType } from 'vue';
@@ -111,32 +110,13 @@ export default defineComponent({
       type: Object as PropType<Blog>,
     },
   },
-  setup(props, { emit }) {
+  setup(props) {
     const nuxtApp = useNuxtApp() as unknown as NuxtApp;
-    const backToNewsfeed = () => emit('clickBackToNews');
-    const edit = () => emit('clickEdit');
 
-    const comments = ref(props.blog?.comments || []);
-    const newComment = ref('');
+    const newComment = ref('hey dit is een test');
 
-    const datePosted = computed(() => {
-      if (!props.blog?.createdAt) return '';
-      return new Date(props.blog.createdAt).toLocaleDateString();
-    });
-
-    const comment = async (e: Event) => {
-      if (!e || !newComment.value) return; // if no comment content -> no comment
-
-      const commentObj = new Comment({
-        itemId: props.blog!.id,
-        comment: newComment.value,
-        poster: nuxtApp.$user.value,
-        createdAt: new Date().toString(),
-      });
-
-      await commentObj.create(nuxtApp);
-
-      comments.value.push(commentObj);
+    const comment = async () => {
+      await props.blog?.comment(nuxtApp, newComment.value);
       newComment.value = '';
     };
 
@@ -157,13 +137,9 @@ export default defineComponent({
     });
 
     return {
-      backToNewsfeed,
-      datePosted,
-      edit,
       likedState,
       likes,
       comment,
-      comments,
       newComment,
       User,
       nuxtApp,

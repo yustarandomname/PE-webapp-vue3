@@ -1,6 +1,7 @@
-import { Comment } from './comment';
+import { Comment, CommentInterface } from './comment';
 import { HasPhoto, PhotoMetaData } from './../hasPhoto';
 import { NuxtApp } from './../nuxtApp';
+import { ResData } from './../response';
 
 // The user that posted the post
 export class Poster extends HasPhoto {
@@ -119,7 +120,29 @@ export abstract class Post extends HasPhoto implements PostInterface {
   }
 
   // COMMENTS
-  //TODO: add comments
+  async comment(nuxtApp: NuxtApp, comment: string) {
+    if (!comment) return;
+    const content: CommentInterface = {
+      itemId: this.id,
+      comment,
+      poster: nuxtApp.$user.value,
+      createdAt: new Date().toString(),
+    };
+
+    const { data } = (await nuxtApp.$httpClient(
+      `v1/${this.endpoint}/${this.id}/comments`,
+      {
+        method: 'POST',
+        data: content,
+      }
+    )) as ResData<CommentInterface>;
+
+    if (data.status != 'ok') return Error(data.message);
+
+    const newComment = new Comment(data.data as CommentInterface);
+    this.comments.push(newComment);
+    return newComment;
+  }
 
   // SHARE
   canShare(): boolean {

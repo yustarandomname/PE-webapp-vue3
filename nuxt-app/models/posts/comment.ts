@@ -1,4 +1,6 @@
 import { User } from './../user';
+import { NuxtApp } from './../nuxtApp';
+import { ResData } from './../response';
 
 // A comment on a certain post
 export interface CommentInterface {
@@ -15,6 +17,7 @@ export class Comment implements CommentInterface {
   comment: string;
   createdAt: string;
   poster: User;
+  endpoint?: string;
 
   constructor(comment: CommentInterface) {
     this.id = comment.id;
@@ -22,5 +25,6 @@ export class Comment implements CommentInterface {
     this.comment = comment.comment;
     this.createdAt = comment.createdAt;
     this.poster = comment.poster;
+    this.endpoint = `news/items/${this.itemId}/comments`;
   }
 }
