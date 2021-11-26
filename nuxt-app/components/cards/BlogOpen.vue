@@ -124,18 +124,19 @@ export default defineComponent({
       return new Date(props.blog.createdAt).toLocaleDateString();
     });
 
-    const comment = (e: Event) => {
-      console.log(newComment.value);
+    const comment = async (e: Event) => {
       if (!e || !newComment.value) return; // if no comment content -> no comment
 
-      const newCommentObj: Comment = {
+      const commentObj = new Comment({
         itemId: props.blog!.id,
         comment: newComment.value,
         poster: nuxtApp.$user.value,
         createdAt: new Date().toString(),
-      };
+      });
 
-      comments.value.push(newCommentObj);
+      await commentObj.create(nuxtApp);
+
+      comments.value.push(commentObj);
       newComment.value = '';
     };
 
