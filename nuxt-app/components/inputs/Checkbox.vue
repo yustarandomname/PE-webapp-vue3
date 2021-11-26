@@ -10,57 +10,38 @@
   </label>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from "vue";
-import { randomId } from "./../util/random";
+<script setup lang="ts">
+import { computed } from 'vue';
+import { randomId } from './../util/random';
 
-export default defineComponent({
-  name: "Checkbox",
-  props: {
-    modelValue: {
-      type: Boolean as PropType<boolean>,
-      default: false,
-    },
-    label: String as PropType<string>,
-    disabled: {
-      type: Boolean as PropType<boolean>,
-      default: false,
-    },
-    filled: {
-      type: Boolean as PropType<boolean>,
-      default: false,
-    },
-    size: {
-      type: String as PropType<"small" | "medium" | "large">,
-      default: "medium",
-    },
+const props = defineProps<{
+  modelValue: boolean;
+  label: string;
+  disabled: boolean;
+  filled: boolean;
+  size: 'small' | 'medium' | 'large';
+}>();
+const emit = defineEmits(['update:modelValue']);
+
+const id = randomId('checkbox');
+
+const input = computed({
+  get() {
+    return props.modelValue as boolean;
   },
-  setup(props, { emit }) {
-    const input = computed({
-      get() {
-        return props.modelValue as boolean;
-      },
-      set(value: boolean) {
-        emit("update:modelValue", value);
-      },
-    });
-
-    // Classes
-    const classes = computed(() => {
-      const classes: { [key: string]: boolean } = {};
-      classes["size-" + props.size] = !!props.size;
-      classes["disabled"] = props.disabled;
-      classes["checked"] = !!input.value;
-      classes["filled"] = props.filled;
-      return classes;
-    });
-
-    return {
-      id: randomId("checkbox"),
-      input,
-      classes,
-    };
+  set(value: boolean) {
+    emit('update:modelValue', value);
   },
+});
+
+// Classes
+const classes = computed(() => {
+  const classes: { [key: string]: boolean } = {};
+  classes['size-' + props.size] = !!props.size;
+  classes['disabled'] = props.disabled;
+  classes['checked'] = !!input.value;
+  classes['filled'] = props.filled;
+  return classes;
 });
 </script>
 
@@ -71,7 +52,7 @@ label {
   align-items: center;
   width: var(--width);
 
-  & input[type="checkbox"] {
+  & input[type='checkbox'] {
     all: unset;
   }
 
@@ -97,7 +78,7 @@ label {
       border-color: var(--primary-color);
 
       &:after {
-        content: "";
+        content: '';
         position: absolute;
         left: 50%;
         top: 50%;

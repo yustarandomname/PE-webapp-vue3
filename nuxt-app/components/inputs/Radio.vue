@@ -23,51 +23,32 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+const props = defineProps<{
+  modelValue: string;
+  options: string[];
+  label: string;
+  disabled: boolean;
+  orientation: 'horizontal' | 'vertical';
+  size: 'small' | 'medium' | 'large';
+}>();
+const emit = defineEmits(['update:modelValue']);
 
-export default defineComponent({
-  name: "Radio",
-  props: {
-    label: String as PropType<string>,
-    options: {
-      type: Array as PropType<string[]>,
-      required: true,
-    },
-    modelValue: String as PropType<string>,
-    disabled: Boolean,
-    orientation: {
-      type: String as PropType<"vertical" | "horizontal">,
-      default: "horizontal",
-    },
-    size: {
-      type: String as PropType<"small" | "medium" | "large">,
-      default: "medium",
-    },
+const classes = computed(() => {
+  const classes: { [key: string]: boolean } = {};
+  classes['size-' + props.size] = !!props.size;
+  classes['disabled'] = props.disabled;
+  classes['row'] = props.orientation !== 'horizontal';
+  return classes;
+});
+
+// Handle V-modal
+const input = computed({
+  get() {
+    return props.modelValue as string;
   },
-  setup(props, { emit }) {
-    const classes = computed(() => {
-      const classes: { [key: string]: boolean } = {};
-      classes["size-" + props.size] = !!props.size;
-      classes["disabled"] = props.disabled;
-      classes["row"] = props.orientation !== "horizontal";
-      return classes;
-    });
-
-    // Handle V-modal
-    const input = computed({
-      get() {
-        return props.modelValue as string;
-      },
-      set(value: string) {
-        emit("update:modelValue", value);
-      },
-    });
-
-    return {
-      classes,
-      input,
-    };
+  set(value: string) {
+    emit('update:modelValue', value);
   },
 });
 </script>
@@ -91,7 +72,7 @@ export default defineComponent({
       width: 100%;
       cursor: pointer;
 
-      & input[type="radio"] {
+      & input[type='radio'] {
         all: unset;
       }
 
@@ -109,7 +90,7 @@ export default defineComponent({
           border-color: var(--primary-color);
 
           &:after {
-            content: "";
+            content: '';
             position: absolute;
             left: 50%;
             top: 50%;

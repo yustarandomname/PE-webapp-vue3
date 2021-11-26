@@ -17,63 +17,52 @@
   </div>
 </template>
 
-<script lang="ts">
-import Avatar from '@/components/Avatar.vue';
-import Button from '@/components/Button.vue';
+<script setup lang="ts">
 import InfiniteList from '@/components/InfiniteList.vue';
 import BlogOpen from '@/components/cards/BlogOpen.vue';
 import BlogPost from '@/components/cards/BlogPost.vue';
 
-import { Ref, defineComponent, onMounted, onBeforeUnmount } from 'vue';
+import { Ref, onMounted, onBeforeMount } from 'vue';
 import { Post } from '../models/posts/post';
 import { Blog, Blogs } from './../models/posts/blogs';
 
-export default defineComponent({
-  components: { Avatar, Button, InfiniteList, BlogPost, BlogOpen },
+const nuxtApp = useNuxtApp();
+const openedPost = ref<Post>();
 
-  setup() {
-    const nuxtApp = useNuxtApp();
-    const openedPost = ref<Post>();
+const fetchItems = async (list: Ref<Post[]>, amount: number) => {
+  const newCards = await Blogs.fetchBlogs(nuxtApp);
 
-    const fetchItems = async (list: Ref<Post[]>, amount: number) => {
-      const newCards = await Blogs.fetchBlogs(nuxtApp);
+  list.value = list.value.concat(newCards.posts);
+};
 
-      list.value = list.value.concat(newCards.posts);
-    };
+// HANDLE OPEN / CLOSE BLOG POST
+const openPost = (post: Post) => {
+  openedPost.value = new Blog(post);
 
-    // HANDLE OPEN / CLOSE BLOG POST
-    const openPost = (post: Post) => {
-      openedPost.value = new Blog(post);
+  const nextURL = `?id=${post.id}`;
+  nuxtApp.$router.push(nextURL);
+};
 
-      const nextURL = `?id=${post.id}`;
-      nuxtApp.$router.push(nextURL);
-    };
+const backToNewsfeed = () => {
+  openedPost.value = undefined;
+  nuxtApp.$router.push('/');
+};
 
-    const backToNewsfeed = () => {
+onBeforeMount(() => {
+  const cardId = nuxtApp.$router.currentRoute.value.query?.id;
+  console.log(cardId);
+  if (cardId) {
+    nuxtApp.$router.push('/');
+    nuxtApp.$router.push(`/cards?id=${cardId}`);
+  }
+});
+
+onMounted(async () => {
+  window.addEventListener('popstate', (e: PopStateEvent) => {
+    if (e.state.current == '/') {
       openedPost.value = undefined;
-      nuxtApp.$router.push('/');
-    };
-
-    onMounted(async () => {
-      const cardId = nuxtApp.$router.currentRoute.value.query?.id;
-      if (cardId) {
-        nuxtApp.$router.push('/');
-        nuxtApp.$router.push(`/cards?id=${cardId}`);
-      }
-
-      window.addEventListener('popstate', (e: PopStateEvent) => {
-        if (e.state.current == '/') {
-          openedPost.value = undefined;
-        }
-      });
-    });
-
-    onBeforeUnmount(() => {
-      window.removeEventListener('popstate', () => {});
-    });
-
-    return { fetchItems, openedPost, openPost, backToNewsfeed };
-  },
+    }
+  });
 });
 </script>
 

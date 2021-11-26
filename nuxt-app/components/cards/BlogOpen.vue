@@ -99,11 +99,10 @@ import Avatar from './../Avatar.vue';
 import Button from './../Button.vue';
 import Textarea from './../inputs/Textarea.vue';
 
-const props = defineProps({
-  blog: {
-    type: Blog,
-  },
-});
+const props = defineProps<{
+  blog: Blog;
+}>();
+
 const nuxtApp = useNuxtApp() as unknown as NuxtApp;
 const newComment = ref('');
 const textAreaRef = ref();

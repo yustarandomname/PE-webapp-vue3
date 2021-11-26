@@ -26,34 +26,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 import { Blog } from './../../models/posts/blogs';
 import Avatar from '../Avatar.vue';
 
-export default defineComponent({
-  name: 'BlogCard',
-  components: {
-    Avatar,
-  },
-  props: {
-    blog: Object as PropType<Blog>,
-  },
-  setup(props) {
-    const imageStyles = computed(() => {
-      if (!props.blog) return { background: 'var(--grey-color-200)' };
-      if (!props.blog.photoMetaData) return;
+const props = defineProps<{
+  blog: Blog;
+}>();
 
-      return { background: `url(${props.blog.getPhotoUrl()})` };
-    });
+const imageStyles = computed(() => {
+  if (!props.blog) return { background: 'var(--grey-color-200)' };
+  if (!props.blog.photoMetaData) return;
 
-    const categoryList = computed(() => {
-      if (!props.blog?.category) return;
-      return [props.blog.category];
-    });
+  return { background: `url(${props.blog.getPhotoUrl()})` };
+});
 
-    return { imageStyles, categoryList };
-  },
+const categoryList = computed(() => {
+  if (!props.blog?.category) return;
+  return [props.blog.category];
 });
 </script>
 
