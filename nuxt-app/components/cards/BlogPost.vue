@@ -44,7 +44,6 @@ export default defineComponent({
       if (!props.blog) return { background: 'var(--grey-color-200)' };
       if (!props.blog.photoMetaData) return;
 
-      console.log(props.blog.photoMetaData);
       return { background: `url(${props.blog.getPhotoUrl()})` };
     });
 

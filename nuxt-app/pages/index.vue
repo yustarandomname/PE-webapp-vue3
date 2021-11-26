@@ -2,6 +2,7 @@
   <div>
     <InfiniteList @fetch="fetchItems" :autoLoad="true">
       <template #default="post">
+        <!-- {{ post.canShare() }} -->
         <BlogPost :blog="post" @click="openPost(post)" />
       </template>
 
@@ -25,7 +26,7 @@ import BlogPost from '@/components/cards/BlogPost.vue';
 
 import { Ref, defineComponent, onMounted, onBeforeUnmount } from 'vue';
 import { Post } from '../models/posts/post';
-import { Blogs } from './../models/posts/blogs';
+import { Blog, Blogs } from './../models/posts/blogs';
 
 export default defineComponent({
   components: { Avatar, Button, InfiniteList, BlogPost, BlogOpen },
@@ -42,7 +43,7 @@ export default defineComponent({
 
     // HANDLE OPEN / CLOSE BLOG POST
     const openPost = (post: Post) => {
-      openedPost.value = post;
+      openedPost.value = new Blog(post);
 
       const nextURL = `?id=${post.id}`;
       nuxtApp.$router.push(nextURL);
