@@ -1,5 +1,5 @@
 import { HasPhoto, PhotoMetaData } from './hasPhoto';
-
+import { Ref } from 'vue';
 export interface Group {
   groupId: number;
   groupName: string;
@@ -48,5 +48,13 @@ export class User extends HasPhoto implements UserInterface {
     this.alowedCategories = user.alowedCategories;
 
     this.firstName = user.fullName.split(' ')[0];
+  }
+
+  // Check if `id` is the same as the logged in user
+  static isOwner(id?: number): boolean {
+    if (!id) return false;
+    const { $user } = useNuxtApp();
+
+    return ($user as Ref<UserInterface>)?.value?.userId == id;
   }
 }

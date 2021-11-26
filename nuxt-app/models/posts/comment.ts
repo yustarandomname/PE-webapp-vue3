@@ -2,7 +2,7 @@ import { User } from './../user';
 
 // A comment on a certain post
 export interface CommentInterface {
-  id: number;
+  id?: number;
   itemId: number;
   comment: string;
   createdAt: string;
@@ -10,7 +10,7 @@ export interface CommentInterface {
 }
 
 export class Comment implements CommentInterface {
-  id: number;
+  id?: number;
   itemId: number;
   comment: string;
   createdAt: string;

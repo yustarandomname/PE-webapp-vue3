@@ -20,11 +20,8 @@
       <Avatar
         v-if="blog?.poster && blog.posterType == 'user'"
         :src="blog?.poster.getPhotoUrl()"
-      >
-        <NuxtLink :to="'./users?id=' + blog?.poster.userId" target="_blank">{{
-          blog?.poster.fullName
-        }}</NuxtLink>
-      </Avatar>
+        :name="blog.poster.firstName"
+      />
     </div>
   </div>
 </template>

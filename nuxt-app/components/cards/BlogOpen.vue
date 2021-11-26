@@ -9,7 +9,13 @@
       >
         Terug naar nieuwsfeed
       </Button>
-      <Button size="small" icon="edit" @click="edit">Aanpassen</Button>
+      <Button
+        v-if="User.isOwner(blog?.poster.userId)"
+        size="small"
+        icon="edit"
+        @click="edit"
+        >Aanpassen</Button
+      >
     </section>
 
     <section
@@ -36,12 +42,15 @@
       <div class="commentTitle">Reageersels</div>
       <div class="comment" v-for="comment in comments">
         <div>
-          {{ comment.content }}
-          <div class="author">{{ comment.user.fullName }}</div>
+          {{ comment.comment }}
+          <div class="author">{{ comment.poster.firstName }}</div>
         </div>
         <div class="actions">
-          <Button size="tiny" icon="celebration"> {{ comment.likes }}</Button>
-          <Button size="tiny" icon="edit" />
+          <Button
+            v-if="User.isOwner(comment.poster.userId)"
+            size="tiny"
+            icon="edit"
+          />
           <Button size="tiny" icon="delete" />
         </div>
       </div>
@@ -58,15 +67,20 @@
 
     <section class="actionButtons bottomActions">
       <Button
-        v-if="canShare"
+        v-if="blog?.canShare()"
         size="small"
         state="primary"
         icon="share"
-        @click="share"
+        @click="blog?.share"
       >
         Delen
       </Button>
-      <Button size="small" state="primary" icon="celebration" @click="like">
+      <Button
+        size="small"
+        :state="likedState"
+        icon="celebration"
+        @click="blog?.toggleLike(nuxtApp)"
+      >
         {{ likes }}
       </Button>
       <Button size="small" icon="reply" @click="comment">Reageer</Button>
@@ -75,11 +89,15 @@
 </template>
 
 <script lang="ts">
+import { NuxtApp } from '../../models/nuxtApp';
+import { User } from './../../models/user';
+import { Comment } from './../../models/posts/comment';
+import { Blog } from './../../models/posts/blogs';
+
 import { defineComponent, PropType } from 'vue';
 import Avatar from './../Avatar.vue';
 import Button from './../Button.vue';
 import Textarea from './../inputs/Textarea.vue';
-import { Blog } from './../../models/posts/blogs';
 
 export default defineComponent({
   name: 'BlogOpen',
@@ -94,11 +112,10 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const { $user } = useNuxtApp();
+    const nuxtApp = useNuxtApp() as unknown as NuxtApp;
     const backToNewsfeed = () => emit('clickBackToNews');
     const edit = () => emit('clickEdit');
 
-    const canShare = ref(false);
     const comments = ref(props.blog?.comments || []);
     const newComment = ref('');
 
@@ -107,55 +124,48 @@ export default defineComponent({
       return new Date(props.blog.createdAt).toLocaleDateString();
     });
 
-    const share = async (e: Event) => {
-      if (!e || !navigator || !navigator.share) return;
-
-      const shareData = {
-        title: props.blog?.title,
-        text: props.blog?.content,
-        url: 'localhost:8000',
-      };
-
-      (await navigator?.share) && navigator.share(shareData);
-    };
-    const like = () => console.log('like');
     const comment = (e: Event) => {
       console.log(newComment.value);
       if (!e || !newComment.value) return; // if no comment content -> no comment
 
-      const newCommentObj = {
-        id: 123,
-        user: $user,
-        likes: 1,
-        content: newComment.value,
+      const newCommentObj: Comment = {
+        itemId: props.blog!.id,
+        comment: newComment.value,
+        poster: nuxtApp.$user.value,
+        createdAt: new Date().toString(),
       };
 
       comments.value.push(newCommentObj);
       newComment.value = '';
     };
 
+    const likedState = computed(() => {
+      const likedBy = Array.from(props.blog?.likedBy || []);
+      const { $user } = useNuxtApp() as unknown as NuxtApp;
+
+      if (!$user?.value) return 'default';
+      if (!likedBy.includes($user.value.userId)) return 'default';
+      return 'primary';
+    });
+
     const likes = computed(() => {
       if (!props.blog) return 'like';
       if (props.blog.likedBy.length == 1)
-        return props.blog.likedBy.length + ' like';
-      return props.blog.likedBy.length + ' likes';
-    });
-
-    onMounted(() => {
-      if (!!navigator?.share) canShare.value = true; // init canShare
+        return props.blog.likedBy.length + ' kudo';
+      return props.blog.likedBy.length + ' kudos';
     });
 
     return {
       backToNewsfeed,
       datePosted,
       edit,
-      like,
+      likedState,
       likes,
-      share,
-      canShare,
       comment,
       comments,
       newComment,
+      User,
+      nuxtApp,
     };
   },
 });

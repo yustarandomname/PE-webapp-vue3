@@ -3,6 +3,12 @@ import type { Ref } from 'vue';
 import { User, UserInterface } from './../models/user';
 import axios from 'axios';
 
+const resetUser = (nuxtApp: NuxtApp) => {
+  window.localStorage.removeItem('user');
+  nuxtApp.$user.value = null;
+  nuxtApp.$authenticated.value = false;
+};
+
 // Create axios client with options
 const createClient = () =>
   axios.create({
@@ -35,12 +41,14 @@ export const refreshUser = async (
     // Check with server if user is truly logged in
     const { data } = await $httpClient('/v1/auth/me');
 
-    if (!data) return { error: Error('No response from server') };
+    if (!data) {
+      resetUser(nuxtApp);
+      return { error: Error('No response from server') };
+    }
 
     window.localStorage.setItem('user', JSON.stringify(data as UserInterface));
 
-    $user.value = new User(data as UserInterface); // TODO
-    $authenticated.value = true;
+    $user.value = new User(data as UserInterface);
 
     return { user: data as UserInterface };
   } catch (error) {
@@ -79,9 +87,7 @@ const createSignOut = (nuxtApp: NuxtApp) => {
     await nuxtApp.$httpClient('/v1/auth/logout', {
       method: 'POST',
     });
-    window.localStorage.removeItem('user');
-    nuxtApp.$user.value = null;
-    nuxtApp.$authenticated.value = false;
+    resetUser(nuxtApp);
   };
 };
 
@@ -97,7 +103,12 @@ export const setupAuth = (
   if (!nuxtApp.$user) nuxtApp.provide('user', ref<User>());
 
   if (!nuxtApp.$authenticated)
-    nuxtApp.provide('authenticated', ref<boolean>(false));
+    nuxtApp.provide(
+      'authenticated',
+      computed<boolean>(() => {
+        return nuxtApp.$user.value !== null;
+      })
+    );
 
   if (!nuxtApp.$signIn)
     nuxtApp.provide('signIn', createSignIn(nuxtApp, loginError));

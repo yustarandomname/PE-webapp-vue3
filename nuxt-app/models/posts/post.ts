@@ -1,11 +1,13 @@
 import { Comment } from './comment';
 import { HasPhoto, PhotoMetaData } from './../hasPhoto';
+import { NuxtApp } from './../nuxtApp';
 
 // The user that posted the post
 export class Poster extends HasPhoto {
   userId: number;
   fullName?: string;
   groupName?: string;
+  firstName: string;
 
   constructor(
     userId: number,
@@ -17,6 +19,7 @@ export class Poster extends HasPhoto {
     this.userId = userId;
     this.fullName = fullName;
     this.groupName = groupName;
+    this.firstName = fullName?.split(' ')[0] || 'Onbekend';
   }
 }
 
@@ -38,6 +41,7 @@ export interface PostInterface {
   updatedAt: string;
   datePosted: string;
   type?: PostType;
+  endpoint: string;
 }
 
 export abstract class Post extends HasPhoto implements PostInterface {
@@ -53,6 +57,7 @@ export abstract class Post extends HasPhoto implements PostInterface {
   updatedAt: string;
   datePosted: string;
   type: PostType;
+  endpoint: string = 'news/items';
 
   constructor(post: PostInterface) {
     super(post.photoMetaData);
@@ -80,6 +85,58 @@ export abstract class Post extends HasPhoto implements PostInterface {
   author(): string {
     if (this.poster === undefined) return 'Onbekend';
     return this.poster.fullName || this.poster.groupName || 'Onbekend';
+  }
+
+  // LIKES
+  like(nuxtApp: NuxtApp): void {
+    nuxtApp.$httpClient({
+      method: 'POST',
+      url: `v1/${this.endpoint}/${this.id}/like`,
+    });
+    const userId = nuxtApp.$user.value.userId;
+    this.likedBy.push(userId);
+  }
+
+  unlike(nuxtApp: NuxtApp): void {
+    nuxtApp.$httpClient({
+      method: 'DELETE',
+      url: `v1/${this.endpoint}/${this.id}/like`,
+    });
+    const userId = nuxtApp.$user.value.userId;
+    this.likedBy = this.likedBy.filter((id) => id !== userId);
+  }
+
+  toggleLike(nuxtApp: NuxtApp): void {
+    if (!nuxtApp?.$user?.value.userId) return console.log('no nuxtApp');
+
+    const userId = nuxtApp.$user.value.userId;
+    if (this.likedBy.includes(userId)) {
+      this.unlike(nuxtApp);
+      return;
+    }
+
+    this.like(nuxtApp);
+  }
+
+  // COMMENTS
+  //TODO: add comments
+
+  // SHARE
+  canShare(): boolean {
+    return !!navigator?.share;
+  }
+
+  // TODO: check if this works
+  async share(e: Event) {
+    if (!e || !this.canShare()) return;
+
+    const shareData = {
+      title: this.title,
+      text: this.content,
+      url: 'localhost:8000', // TODO: get url from env
+    };
+
+    navigator.share(shareData);
   }
 }
 
