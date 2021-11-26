@@ -121,7 +121,8 @@ export abstract class Post extends HasPhoto implements PostInterface {
 
   // COMMENTS
   async comment(nuxtApp: NuxtApp, comment: string) {
-    if (!comment) return;
+    if (!comment) return; // if no comment content -> no comment
+
     const content: CommentInterface = {
       itemId: this.id,
       comment,
