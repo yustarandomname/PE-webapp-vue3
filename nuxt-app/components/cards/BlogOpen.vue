@@ -43,15 +43,16 @@
       <div class="comment" v-for="comment in blog?.comments || []">
         <div>
           {{ comment.comment }}
-          <div class="author">{{ comment.poster.firstName }}</div>
+          <div class="author">{{ comment.poster.fullName }}</div>
         </div>
         <div class="actions">
           <Button
             v-if="User.isOwner(comment.poster.userId)"
             size="tiny"
-            icon="edit"
+            icon="delete"
+            state="destructive"
+            @click="blog?.deleteComment(nuxtApp, comment.id)"
           />
-          <Button size="tiny" icon="delete" />
         </div>
       </div>
 
@@ -60,6 +61,7 @@
           size="large"
           placeholder="nieuw reactie"
           :minRows="2"
+          ref="textAreaRef"
           v-model="newComment"
         />
       </div>
@@ -88,63 +90,43 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { NuxtApp } from '../../models/nuxtApp';
 import { User } from './../../models/user';
 import { Blog } from './../../models/posts/blogs';
 
-import { defineComponent, PropType } from 'vue';
 import Avatar from './../Avatar.vue';
 import Button from './../Button.vue';
 import Textarea from './../inputs/Textarea.vue';
 
-export default defineComponent({
-  name: 'BlogOpen',
-  components: {
-    Avatar,
-    Button,
-    Textarea,
+const props = defineProps({
+  blog: {
+    type: Blog,
   },
-  props: {
-    blog: {
-      type: Object as PropType<Blog>,
-    },
-  },
-  setup(props) {
-    const nuxtApp = useNuxtApp() as unknown as NuxtApp;
+});
+const nuxtApp = useNuxtApp() as unknown as NuxtApp;
+const newComment = ref('');
+const textAreaRef = ref();
 
-    const newComment = ref('hey dit is een test');
+const comment = async () => {
+  await props.blog?.comment(nuxtApp, newComment.value);
+  textAreaRef.value?.clearTextarea();
+};
 
-    const comment = async () => {
-      await props.blog?.comment(nuxtApp, newComment.value);
-      newComment.value = '';
-    };
+const likedState = computed(() => {
+  const likedBy = Array.from(props.blog?.likedBy || []);
+  const { $user } = useNuxtApp() as unknown as NuxtApp;
 
-    const likedState = computed(() => {
-      const likedBy = Array.from(props.blog?.likedBy || []);
-      const { $user } = useNuxtApp() as unknown as NuxtApp;
+  if (!$user?.value) return 'default';
+  if (!likedBy.includes($user.value.userId)) return 'default';
+  return 'primary';
+});
 
-      if (!$user?.value) return 'default';
-      if (!likedBy.includes($user.value.userId)) return 'default';
-      return 'primary';
-    });
-
-    const likes = computed(() => {
-      if (!props.blog) return 'like';
-      if (props.blog.likedBy.length == 1)
-        return props.blog.likedBy.length + ' kudo';
-      return props.blog.likedBy.length + ' kudos';
-    });
-
-    return {
-      likedState,
-      likes,
-      comment,
-      newComment,
-      User,
-      nuxtApp,
-    };
-  },
+const likes = computed(() => {
+  if (!props.blog) return 'like';
+  if (props.blog.likedBy.length == 1)
+    return props.blog.likedBy.length + ' kudo';
+  return props.blog.likedBy.length + ' kudos';
 });
 </script>
 

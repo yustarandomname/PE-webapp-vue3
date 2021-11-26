@@ -38,9 +38,19 @@
   --white-color: var(--grey-color-000);
   --text-dark-color: var(--grey-color-900);
 
+  // Destructive color
+  --destructive-color-900: hsl(9, 50%, 52%);
+  --destructive-color-800: hsl(10.6, 51.3%, 46.1%);
+  --destructive-color-700: hsl(10.5, 50.2%, 49.6%);
+  --destructive-color-600: hsl(10.5, 54.7%, 53.7%);
+  --destructive-color-500: hsl(10.5, 60.4%, 59%); /* Proteus-Eretes oranje */
+  --destructive-color-400: hsl(10.4, 64.6%, 63.9%);
+  --destructive-color-300: hsl(10.5, 66.2%, 69%);
+  --destructive-color-200: hsl(10.4, 78.3%, 76.5%);
+  --destructive-color-100: hsl(10.2, 70%, 85.7%);
+
   /* SPECIAL COLORS | TODO: revision, colors are now chosen arbirary */
-  --error-color: hsl(0, 100%, 50%);
-  --destructive-color: hsl(0, 100%, 50%);
+
   --success-color: hsl(120, 100%, 50%);
 
   /* CORNER RADIUS */
@@ -100,8 +110,8 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background: var(--grey-color-200);
   color: var(--grey-color-900);
 }

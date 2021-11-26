@@ -145,6 +145,25 @@ export abstract class Post extends HasPhoto implements PostInterface {
     return newComment;
   }
 
+  async deleteComment(nuxtApp: NuxtApp, commentId?: number) {
+    console.log(commentId);
+    if (!commentId) return;
+
+    if (nuxtApp.$user.value.userId !== this.poster.userId) return;
+
+    console.log('delete');
+    const { data } = (await nuxtApp.$httpClient(
+      `v1/${this.endpoint}/${this.id}/comments/${commentId}`,
+      {
+        method: 'DELETE',
+      }
+    )) as ResData<CommentInterface>;
+
+    if (data.status != 'ok') return Error(data.message);
+
+    this.comments = this.comments.filter((comment) => comment.id !== commentId);
+  }
+
   // SHARE
   canShare(): boolean {
     return !!navigator?.share;

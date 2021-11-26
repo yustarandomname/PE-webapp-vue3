@@ -1,7 +1,12 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue';
 
-type ButtonState = 'default' | 'primary' | 'secondary' | 'disabled';
+type ButtonState =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'disabled'
+  | 'destructive';
 
 export default defineComponent({
   name: 'Button',
@@ -72,7 +77,7 @@ button {
   border-radius: var(--corner-radius);
   cursor: pointer;
   transform: scale(1);
-  transition: transform 0.2s;
+  transition: transform 0.2s, opacity 0.2s;
 
   & > div {
     display: flex;
@@ -91,7 +96,9 @@ button {
   }
 
   &.state-destructive {
-    --bg: var(--destructive-color);
+    --bg: var(--destructive-color-200) !important;
+    --color: var(--destructive-color-900) !important;
+    opacity: 0.6;
   }
 
   /* SIZE */
@@ -115,6 +122,7 @@ button {
 
   &:hover {
     transform: scale(1.05);
+    opacity: 1;
 
     &.size-tiny {
       transform: scale(1.1);
