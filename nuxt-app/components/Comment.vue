@@ -14,20 +14,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script setup lang="ts">
+import type { Comment } from './../models/posts/comment';
 
-import { Comment } from './../models/posts/comment';
-
-export default defineComponent({
-  name: 'Comment',
-  props: {
-    comment: {
-      type: Object as PropType<Comment>,
-      required: true,
-    },
-  },
-});
+const props = defineProps<{
+  comment: Comment;
+}>();
 </script>
 
 <style scoped lang="scss">

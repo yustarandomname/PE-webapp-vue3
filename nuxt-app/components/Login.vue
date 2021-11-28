@@ -1,5 +1,5 @@
 <template>
-  <Modal v-if="!authenticated">
+  <Modal>
     <template #header>Login</template>
     <form @submit.prevent="login">
       <Input size="large" label="email" v-model="email" />
@@ -10,46 +10,29 @@
   </Modal>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Modal from './Modal.vue';
 import Input from './inputs/Input.vue';
 import Button from './Button.vue';
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'login',
-  components: {
-    Modal,
-    Input,
-    Button,
-  },
-  props: {
-    error: String,
-  },
-  setup() {
-    const nuxtApp = useNuxtApp();
-
-    const loading = ref(false);
-    const email = ref('');
-    const password = ref('');
-
-    const login = async (e: Event) => {
-      if (!e || e.type != 'submit' || !loading) return;
-
-      loading.value = true;
-      await nuxtApp.$signIn(email.value, password.value);
-      loading.value = false;
-    };
-
-    return {
-      email,
-      password,
-      login,
-      loading,
-      authenticated: nuxtApp.$authenticated,
-    };
+const props = defineProps({
+  error: {
+    type: String,
   },
 });
+const nuxtApp = useNuxtApp();
+
+const loading = ref(false);
+const email = ref('');
+const password = ref('');
+
+const login = async (e: Event) => {
+  if (!e || e.type != 'submit' || !loading) return;
+
+  loading.value = true;
+  await nuxtApp.$signIn(email.value, password.value);
+  loading.value = false;
+};
 </script>
 
 <style lang="scss">

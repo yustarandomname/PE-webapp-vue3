@@ -28,13 +28,12 @@ export const refreshUser = async (
   user?: UserInterface;
   error?: Error;
 }> => {
-  const { $user, $authenticated, $httpClient } = nuxtApp;
+  const { $user, $httpClient } = nuxtApp;
   const userString = window.localStorage.getItem('user');
 
   // Set local user to be equal to the user in local storage
   if (userString) {
     $user.value = JSON.parse(userString);
-    $authenticated.value = true;
   }
 
   try {

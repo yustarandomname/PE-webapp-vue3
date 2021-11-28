@@ -1,15 +1,3 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
-
-export default defineComponent({
-  props: {
-    title: {
-      type: String as PropType<string>,
-    },
-  },
-});
-</script>
-
 <template>
   <div class="background" @click="$emit('close')">
     <div class="modal" @click.stop>
@@ -22,6 +10,14 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+const props = defineProps({
+  title: {
+    type: String,
+  },
+});
+</script>
 
 <style scoped lang="scss">
 .background {

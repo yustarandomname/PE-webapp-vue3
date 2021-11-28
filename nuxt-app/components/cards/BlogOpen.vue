@@ -91,6 +91,7 @@
 </template>
 
 <script setup lang="ts">
+import { PropType, computed } from 'vue';
 import { NuxtApp } from '../../models/nuxtApp';
 import { User } from './../../models/user';
 import { Blog } from './../../models/posts/blogs';
@@ -99,9 +100,12 @@ import Avatar from './../Avatar.vue';
 import Button from './../Button.vue';
 import Textarea from './../inputs/Textarea.vue';
 
-const props = defineProps<{
-  blog: Blog;
-}>();
+const props = defineProps({
+  blog: {
+    type: Object as PropType<Blog>,
+    required: false,
+  },
+});
 
 const nuxtApp = useNuxtApp() as unknown as NuxtApp;
 const newComment = ref('');

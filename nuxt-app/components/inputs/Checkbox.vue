@@ -11,16 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, PropType } from 'vue';
 import { randomId } from './../util/random';
 
-const props = defineProps<{
-  modelValue: boolean;
-  label: string;
-  disabled: boolean;
-  filled: boolean;
-  size: 'small' | 'medium' | 'large';
-}>();
+const props = defineProps({
+  modelValue: Boolean,
+  label: String,
+  disabled: Boolean,
+  filled: Boolean,
+  size: String as PropType<'small' | 'medium' | 'large'>,
+});
 const emit = defineEmits(['update:modelValue']);
 
 const id = randomId('checkbox');

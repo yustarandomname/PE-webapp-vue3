@@ -24,14 +24,16 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  modelValue: string;
-  options: string[];
-  label: string;
-  disabled: boolean;
-  orientation: 'horizontal' | 'vertical';
-  size: 'small' | 'medium' | 'large';
-}>();
+import type { PropType } from 'vue';
+
+const props = defineProps({
+  modelValue: String,
+  options: Array as PropType<string[]>,
+  label: String,
+  disabled: Boolean,
+  orientation: String as PropType<'horizontal' | 'vertical'>,
+  size: String as PropType<'small' | 'medium' | 'large'>,
+});
 const emit = defineEmits(['update:modelValue']);
 
 const classes = computed(() => {

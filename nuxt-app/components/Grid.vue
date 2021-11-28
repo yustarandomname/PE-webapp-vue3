@@ -1,16 +1,3 @@
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  props: {
-    title: {
-      type: String,
-      default: "",
-    },
-  },
-});
-</script>
-
 <template>
   <div class="grid">
     <div v-if="title" class="title">{{ title }}</div>
@@ -19,6 +6,15 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+const props = defineProps({
+  title: {
+    type: String,
+    default: '',
+  },
+});
+</script>
 
 <style scoped>
 .grid {

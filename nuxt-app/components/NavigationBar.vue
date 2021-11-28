@@ -19,46 +19,38 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, PropType } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import { User } from './../models/user';
+import { PropType } from 'vue';
 
 import Avatar from './Avatar.vue';
 import Modal from './/Modal.vue';
 
-export default defineComponent({
-  name: 'NavigationBar',
-  components: {
-    Avatar,
-    Modal,
-  },
-  props: {
-    user: Object as PropType<User>,
-  },
-  setup() {
-    const nuxtApp = useNuxtApp();
-    const menu = ref(false);
-
-    const toggleMenu = (e: Event) => {
-      if (!e) return;
-
-      menu.value = !menu.value;
-    };
-
-    const closeMenu = () => {
-      menu.value = false;
-    };
-
-    const signOut = (e: Event) => {
-      if (!e) return;
-
-      nuxtApp.$signOut();
-      closeMenu();
-    };
-
-    return { menu, toggleMenu, closeMenu, signOut };
+const props = defineProps({
+  user: {
+    type: Object as PropType<User>,
   },
 });
+const nuxtApp = useNuxtApp();
+const menu = ref(false);
+
+const toggleMenu = (e: Event) => {
+  if (!e) return;
+
+  menu.value = !menu.value;
+};
+
+const closeMenu = () => {
+  menu.value = false;
+};
+
+const signOut = (e: Event) => {
+  if (!e) return;
+
+  nuxtApp.$signOut();
+  closeMenu();
+};
 </script>
 
 <style scoped lang="scss">

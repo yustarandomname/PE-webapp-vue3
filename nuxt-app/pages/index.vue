@@ -50,12 +50,9 @@ const backToNewsfeed = () => {
 
 onBeforeMount(async () => {
   const cardId = nuxtApp.$router.currentRoute.value.query?.id;
-  console.log(cardId);
-  if (cardId) {
-    const blog = await Blog.fetchBlog(nuxtApp, cardId);
 
-    openedPost.value = blog;
-  }
+  // Set card to open if url has an Id of a blog post
+  openedPost.value = cardId ? await Blog.fetchBlog(nuxtApp, cardId) : undefined;
 });
 
 onMounted(async () => {

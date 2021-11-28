@@ -5,58 +5,54 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue';
+<script setup lang="ts">
+import { computed, PropType } from 'vue';
 
 type AvatarSize = 'small' | 'medium' | 'large';
 type AvatarAlign = 'left' | 'right' | 'top' | 'bottom';
-const defaultSrc =
-  'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg';
 
-export default defineComponent({
-  props: {
-    src: {
-      type: String as PropType<string>,
-      default: defaultSrc,
-    },
-    alt: {
-      type: String as PropType<string>,
-      default: 'avatar',
-    },
-    size: {
-      type: String as PropType<AvatarSize>,
-      default: 'medium',
-    },
-    align: {
-      type: String as PropType<AvatarAlign>,
-      default: 'left',
-    },
-    name: {
-      type: String as PropType<string>,
-      default: '',
-    },
+const props = defineProps({
+  src: {
+    type: String,
+    default:
+      'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg',
   },
-  setup(props, { emit }) {
-    const firstName = computed(() => {
-      const name = props.name.split(' ');
-      return name[0];
-    });
-
-    const classes = computed(() => {
-      const classObject: { [key: string]: boolean } = {};
-      classObject['size-' + props.size] = !!props.size;
-      classObject['align-' + props.align] = !!props.align;
-      return classObject;
-    });
-
-    const replaceByDefault = (e: Event) =>
-      ((e.target as HTMLImageElement).src = defaultSrc);
-
-    const emitClick = () => emit('click');
-
-    return { classes, emitClick, replaceByDefault, firstName };
+  alt: {
+    type: String,
+    default: '',
+  },
+  size: {
+    type: String as PropType<AvatarSize>,
+    default: 'medium',
+  },
+  align: {
+    type: String as PropType<AvatarAlign>,
+    default: 'left',
+  },
+  name: {
+    type: String,
+    default: '',
   },
 });
+const emit = defineEmits(['click']);
+
+const firstName = computed(() => {
+  const name = props.name.split(' ');
+  return name[0];
+});
+
+const classes = computed(() => {
+  const classObject: { [key: string]: boolean } = {};
+  classObject['size-' + props.size] = !!props.size;
+  classObject['align-' + props.align] = !!props.align;
+  return classObject;
+});
+
+const replaceByDefault = (e: Event) =>
+  ((e.target as HTMLImageElement).src =
+    'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg');
+
+const emitClick = () => emit('click');
 </script>
 
 <style scoped lang="scss">

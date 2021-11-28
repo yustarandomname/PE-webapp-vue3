@@ -16,69 +16,61 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, Ref, watch, onMounted } from 'vue';
+<script setup lang="ts">
+import { ref, Ref, watch, onMounted } from 'vue';
 import { Post } from '../models/posts/post';
 
 import Button from './Button.vue';
 
-export default defineComponent({
-  name: 'InfiniteList',
-  components: {
-    Button,
+const props = defineProps({
+  title: {
+    type: String,
+    default: '',
   },
-  props: {
-    title: {
-      type: String,
-    },
-    initCount: {
-      type: Number,
-      default: 10,
-    },
-    pageCount: {
-      type: Number,
-      default: 5,
-    },
-    autoLoad: {
-      type: Boolean,
-      default: true,
-    },
-    bottomOffset: {
-      type: Number,
-      default: 400,
-    },
+  initCount: {
+    type: Number,
+    default: 10,
   },
-  setup(props, { emit }) {
-    const list: Ref<Post[]> = ref([]);
-    const loading = ref(props.initCount);
+  pageCount: {
+    type: Number,
+    default: 5,
+  },
+  autoLoad: {
+    type: Boolean,
+    default: true,
+  },
+  bottomOffset: {
+    type: Number,
+    default: 400,
+  },
+});
+const emit = defineEmits(['fetch']);
+const list: Ref<Post[]> = ref([]);
+const loading = ref(props.initCount);
 
-    watch(list, () => {
-      loading.value = 0;
+watch(list, () => {
+  loading.value = 0;
+});
+
+const loadMore = () => {
+  loading.value = props.pageCount;
+  emit('fetch', list, props.pageCount);
+};
+
+onMounted(async () => {
+  emit('fetch', list, props.initCount);
+
+  if (props.autoLoad) {
+    window.addEventListener('scroll', () => {
+      if (!!loading.value) return;
+      const scrollTop = window.innerHeight + window.scrollY;
+      const height = document.body.offsetHeight;
+
+      if (scrollTop < height - props.bottomOffset) return;
+
+      loadMore();
     });
-
-    const loadMore = () => {
-      loading.value = props.pageCount;
-      emit('fetch', list, props.pageCount);
-    };
-
-    onMounted(async () => {
-      emit('fetch', list, props.initCount);
-
-      if (props.autoLoad) {
-        window.addEventListener('scroll', () => {
-          if (!!loading.value) return;
-          const scrollTop = window.innerHeight + window.scrollY;
-          const height = document.body.offsetHeight;
-
-          if (scrollTop < height - props.bottomOffset) return;
-
-          loadMore();
-        });
-      }
-    });
-
-    return { list, loading, loadMore };
-  },
+  }
 });
 </script>
 
