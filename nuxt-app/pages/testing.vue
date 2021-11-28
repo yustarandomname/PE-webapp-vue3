@@ -1,43 +1,15 @@
 <template>
-  <div>
-    <h1 ref="headline">Headline</h1>
-
-    <Login />
-
-    <Texteditor v-model="input2" />
-
-    <div class="container">
-      <Input
-        placeholder="hello"
-        v-model="input1"
-        icon="trash-outline"
-        @iconClick="input1 = ''"
-      />
-
-      <p>input1: {{ input1 }}</p>
-      <p>input2: {{ input2 }}</p>
-    </div>
-  </div>
+  <editor-content :editor="editor" />
 </template>
 
-<script>
-import Input from "../components/inputs/Input.vue";
-import Texteditor from "../components/texteditor/Texteditor.vue";
+<script setup lang="ts">
+import { useEditor, EditorContent } from '@tiptap/vue-3';
+import StarterKit from '@tiptap/starter-kit';
 
-export default {
-  components: {
-    Input,
-    Texteditor,
-  },
-
-  data() {
-    return {
-      editor: null,
-      input1: "",
-      input2: "",
-    };
-  },
-};
+const editor = useEditor({
+  content: '<p>I’m running Tiptap with Vue.js. 🎉</p>',
+  extensions: [StarterKit],
+});
 </script>
 
 <style scoped>
