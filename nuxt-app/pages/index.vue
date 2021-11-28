@@ -48,12 +48,13 @@ const backToNewsfeed = () => {
   nuxtApp.$router.push('/');
 };
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   const cardId = nuxtApp.$router.currentRoute.value.query?.id;
   console.log(cardId);
   if (cardId) {
-    nuxtApp.$router.push('/');
-    nuxtApp.$router.push(`/cards?id=${cardId}`);
+    const blog = await Blog.fetchBlog(nuxtApp, cardId);
+
+    openedPost.value = blog;
   }
 });
 
