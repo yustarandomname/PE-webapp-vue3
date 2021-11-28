@@ -37,52 +37,38 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { actionFolders, specialActions } from "./actionFolders";
-import { executeAction } from "./executeAction";
+<script setup lang="ts">
+import { PropType } from 'vue';
+import { actionFolders, specialActions } from './actionFolders';
+import { executeAction } from './executeAction';
 
-export default defineComponent({
-  name: "textEditor",
-  props: {
-    modelValue: {
-      type: String as PropType<string>,
-      default: "",
-    },
+const props = defineProps({
+  modelValue: {
+    type: String as PropType<string>,
+    default: '',
   },
-  setup(props, { emit }) {
-    const content = ref<HTMLElement | null>(null);
-    const openIndex = ref<number>(0);
+});
+const emit = defineEmits(['update:modelValue']);
+const content = ref<HTMLElement | null>(null);
+const openIndex = ref<number>(0);
 
-    const toggleOpenFolder = (index: number) => {
-      openIndex.value = index;
-    };
+const toggleOpenFolder = (index: number) => {
+  openIndex.value = index;
+};
 
-    // Handle V-modal
-    const handleInput = (e: KeyboardEvent) => {
-      const val = (e.target as HTMLInputElement).innerHTML;
-      emit("update:modelValue", val);
-    };
+// Handle V-modal
+const handleInput = (e: KeyboardEvent) => {
+  const val = (e.target as HTMLInputElement).innerHTML;
+  emit('update:modelValue', val);
+};
 
-    onMounted(() => {
-      if (content.value) {
-        const copyTextarea = content.value;
-        copyTextarea.innerHTML = props.modelValue;
+onMounted(() => {
+  if (content.value) {
+    const copyTextarea = content.value;
+    copyTextarea.innerHTML = props.modelValue;
 
-        content.value = copyTextarea;
-      }
-    });
-
-    return {
-      content,
-      openIndex,
-      toggleOpenFolder,
-      actionFolders,
-      specialActions,
-      executeAction,
-      handleInput,
-    };
-  },
+    content.value = copyTextarea;
+  }
 });
 </script>
 

@@ -27,13 +27,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { PropType, computed } from 'vue';
 import { Blog } from './../../models/posts/blogs';
 import Avatar from '../Avatar.vue';
 
-const props = defineProps<{
-  blog: Blog;
-}>();
+const props = defineProps({
+  blog: {
+    type: Object as PropType<Blog>,
+    required: false,
+  },
+});
 
 const imageStyles = computed(() => {
   if (!props.blog) return { background: 'var(--grey-color-200)' };

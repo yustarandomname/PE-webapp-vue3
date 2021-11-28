@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, defineComponent, ref, computed } from 'vue';
+import { PropType, ref, computed } from 'vue';
 import { randomId } from '../util/random';
 
 type InputTypes =
@@ -48,18 +48,18 @@ type InputTypes =
 
 type InputSize = 'small' | 'medium' | 'large';
 
-const props = defineProps<{
-  type: InputTypes;
-  modelValue: string;
-  placeholder: string;
-  label: string;
-  icon: string;
-  error: string;
-  autocomplete: string;
-  size: InputSize;
-  disabled: boolean;
-  required: boolean;
-}>();
+const props = defineProps({
+  type: String as PropType<InputTypes>,
+  modelValue: String,
+  placeholder: String,
+  label: String,
+  icon: String,
+  error: String,
+  autocomplete: String,
+  size: String as PropType<InputSize>,
+  disabled: Boolean,
+  required: Boolean,
+});
 const emit = defineEmits(['update:modelValue', 'iconClick']);
 
 // random string

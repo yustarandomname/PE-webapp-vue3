@@ -1,51 +1,3 @@
-<script lang="ts">
-import { defineComponent, computed, PropType } from 'vue';
-
-type ButtonState =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'disabled'
-  | 'destructive';
-
-export default defineComponent({
-  name: 'Button',
-  props: {
-    icon: {
-      type: String as PropType<string>,
-      default: '',
-    },
-    state: {
-      type: String as PropType<ButtonState>,
-      default: 'default',
-    },
-    size: {
-      type: String as PropType<'tiny' | 'small' | 'medium' | 'large'>,
-      default: 'medium',
-    },
-    loading: {
-      type: Boolean as PropType<boolean>,
-      default: false,
-    },
-    disabled: {
-      type: Boolean as PropType<boolean>,
-      default: false,
-    },
-  },
-  setup(props) {
-    const classes = computed(() => {
-      const classObj: { [key: string]: boolean } = {};
-      classObj['disabled'] = !!props.disabled || !!props.loading;
-      classObj['size-' + props.size] = !!props.size;
-      classObj['state-' + props.state] = !!props.state;
-      return classObj;
-    });
-
-    return { classes };
-  },
-});
-</script>
-
 <template>
   <button
     @click.self="$emit('click')"
@@ -62,6 +14,48 @@ export default defineComponent({
     </div>
   </button>
 </template>
+
+<script setup lang="ts">
+import { computed, PropType } from 'vue';
+
+type ButtonState =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'disabled'
+  | 'destructive';
+
+const props = defineProps({
+  icon: {
+    type: String,
+    default: '',
+  },
+  state: {
+    type: String as PropType<ButtonState>,
+    default: 'default',
+  },
+  size: {
+    type: String as PropType<'small' | 'medium' | 'large'>,
+    default: 'medium',
+  },
+  loading: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
+  disabled: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
+});
+
+const classes = computed(() => {
+  const classObj: { [key: string]: boolean } = {};
+  classObj['disabled'] = !!props.disabled || !!props.loading;
+  classObj['size-' + props.size] = !!props.size;
+  classObj['state-' + props.state] = !!props.state;
+  return classObj;
+});
+</script>
 
 <style scoped lang="scss">
 button {

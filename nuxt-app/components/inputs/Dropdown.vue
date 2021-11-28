@@ -8,13 +8,15 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  label: string;
-  options: string[];
-  modelValue: string;
-  disabled: boolean;
-  size: 'small' | 'medium' | 'large';
-}>();
+import { PropType } from 'vue';
+
+const props = defineProps({
+  label: String,
+  options: Array as PropType<string[]>,
+  modelValue: String,
+  disabled: Boolean,
+  size: String as PropType<'small' | 'medium' | 'large'>,
+});
 const emit = defineEmits(['update:modelValue']);
 
 const classes = computed(() => {
