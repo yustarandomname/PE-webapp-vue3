@@ -1,22 +1,27 @@
 <script lang="ts">
-import { defineComponent, computed, PropType } from "vue";
+import { defineComponent, computed, PropType } from 'vue';
 
-type ButtonState = "defualt" | "primary" | "secondary" | "disabled";
+type ButtonState =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'disabled'
+  | 'destructive';
 
 export default defineComponent({
-  name: "Button",
+  name: 'Button',
   props: {
     icon: {
       type: String as PropType<string>,
-      default: "",
+      default: '',
     },
     state: {
       type: String as PropType<ButtonState>,
-      default: "default",
+      default: 'default',
     },
     size: {
-      type: String as PropType<"tiny" | "small" | "medium" | "large">,
-      default: "medium",
+      type: String as PropType<'tiny' | 'small' | 'medium' | 'large'>,
+      default: 'medium',
     },
     loading: {
       type: Boolean as PropType<boolean>,
@@ -30,9 +35,9 @@ export default defineComponent({
   setup(props) {
     const classes = computed(() => {
       const classObj: { [key: string]: boolean } = {};
-      classObj["disabled"] = !!props.disabled || !!props.loading;
-      classObj["size-" + props.size] = !!props.size;
-      classObj["state-" + props.state] = !!props.state;
+      classObj['disabled'] = !!props.disabled || !!props.loading;
+      classObj['size-' + props.size] = !!props.size;
+      classObj['state-' + props.state] = !!props.state;
       return classObj;
     });
 
@@ -43,7 +48,7 @@ export default defineComponent({
 
 <template>
   <button
-    @click="$emit('click')"
+    @click.self="$emit('click')"
     :class="classes"
     :disabled="disabled || loading"
   >
@@ -72,7 +77,7 @@ button {
   border-radius: var(--corner-radius);
   cursor: pointer;
   transform: scale(1);
-  transition: transform 0.2s;
+  transition: transform 0.2s, opacity 0.2s;
 
   & > div {
     display: flex;
@@ -91,7 +96,9 @@ button {
   }
 
   &.state-destructive {
-    --bg: var(--destructive-color);
+    --bg: var(--destructive-color-200) !important;
+    --color: var(--destructive-color-900) !important;
+    opacity: 0.6;
   }
 
   /* SIZE */
@@ -115,6 +122,7 @@ button {
 
   &:hover {
     transform: scale(1.05);
+    opacity: 1;
 
     &.size-tiny {
       transform: scale(1.1);

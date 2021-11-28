@@ -11,70 +11,70 @@
   </div>
 </template>
 
-<script lang="ts">
-import { randomId } from "../util/random";
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { randomId } from '../util/random';
+import { PropType } from 'vue';
 
-export default defineComponent({
-  name: "Textarea",
-  props: {
-    label: String as PropType<string>,
-    placeholder: String as PropType<string>,
-    modelValue: String as PropType<string>,
-    disabled: Boolean as PropType<boolean>,
-    resizeable: Boolean as PropType<boolean>,
-    size: String as PropType<"small" | "medium" | "large">,
-    minRows: {
-      type: Number as PropType<number>,
-      default: 4,
-    },
-    maxRows: {
-      type: Number as PropType<number>,
-      default: 10,
-    },
+const props = defineProps({
+  label: String,
+  placeholder: String,
+  modelValue: String,
+  disabled: Boolean,
+  resizeable: Boolean,
+  size: String as PropType<'small' | 'medium' | 'large'>,
+  minRows: {
+    type: Number as PropType<number>,
+    default: 4,
   },
-  setup(props, { emit }) {
-    const id = randomId("textarea");
-    const textarea = ref<HTMLInputElement | null>(null);
-
-    const classes = computed(() => {
-      const classes: { [key: string]: boolean } = {};
-      classes["size-" + props.size] = !!props.size;
-      classes["disabled"] = props.disabled as boolean;
-      classes["resize"] = props.resizeable as boolean;
-      return classes;
-    });
-
-    const styles = computed(() => {
-      let styles: { [key: string]: string } = {};
-      styles["min-height"] = 1.1 * props.minRows + 1 + "rem";
-      styles["max-height"] = 1.1 * props.maxRows + 1 + "rem";
-      return styles;
-    });
-
-    // Handle V-modal
-    const handleInput = (e: KeyboardEvent) => {
-      const val = (e.target as HTMLInputElement).innerHTML;
-      emit("update:modelValue", val);
-    };
-
-    onMounted(() => {
-      if (textarea.value) {
-        const copyTextarea = textarea.value;
-        copyTextarea.innerHTML = props.modelValue as string;
-
-        textarea.value = copyTextarea;
-      }
-    });
-
-    return {
-      id,
-      classes,
-      styles,
-      handleInput,
-      textarea,
-    };
+  maxRows: {
+    type: Number as PropType<number>,
+    default: 10,
   },
+});
+const emit = defineEmits(['update:modelValue']);
+
+const id = randomId('textarea');
+const textarea = ref<HTMLInputElement | null>(null);
+
+const classes = computed(() => {
+  const classes: { [key: string]: boolean } = {};
+  classes['size-' + props.size] = !!props.size;
+  classes['disabled'] = props.disabled as boolean;
+  classes['resize'] = props.resizeable as boolean;
+  return classes;
+});
+
+const styles = computed(() => {
+  let styles: { [key: string]: string } = {};
+  styles['min-height'] = 1.1 * props.minRows + 1 + 'rem';
+  styles['max-height'] = 1.1 * props.maxRows + 1 + 'rem';
+  return styles;
+});
+
+// Handle V-modal
+const handleInput = (e: KeyboardEvent) => {
+  const val = (e.target as HTMLInputElement).innerHTML;
+  emit('update:modelValue', val);
+};
+
+const clearTextarea = () => {
+  if (textarea.value) {
+    textarea.value.innerHTML = '';
+    emit('update:modelValue', '');
+  }
+};
+
+onMounted(() => {
+  if (textarea.value) {
+    const copyTextarea = textarea.value;
+    copyTextarea.innerHTML = props.modelValue as string;
+
+    textarea.value = copyTextarea;
+  }
+});
+
+defineExpose({
+  clearTextarea,
 });
 </script>
 

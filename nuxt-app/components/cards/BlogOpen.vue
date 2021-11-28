@@ -5,43 +5,54 @@
         size="small"
         state="primary"
         icon="arrow_back"
-        @click="backToNewsfeed"
+        @click="$emit('clickBackToNews')"
       >
         Terug naar nieuwsfeed
       </Button>
-      <Button size="small" icon="edit" @click="edit">Aanpassen</Button>
+      <Button
+        v-if="User.isOwner(blog?.poster.userId)"
+        size="small"
+        icon="edit"
+        @click="$emit('clickEdit')"
+        >Aanpassen</Button
+      >
     </section>
 
     <section
       class="image"
-      v-if="card?.image"
-      :style="'background: url(' + card?.image + ')'"
+      v-if="blog?.photoMetaData"
+      :style="'background: url(' + blog?.getPhotoUrl() + ')'"
     />
 
     <section class="content">
       <div class="titles">
         <div>
-          <div class="header">{{ card?.header }}</div>
-          <div class="date">{{ card?.datePosted }}</div>
+          <div class="header">{{ blog?.title }}</div>
+          <div class="date">{{ blog?.datePosted }}</div>
         </div>
-        <Avatar :src="card?.postedBy.avatar">{{
-          card?.postedBy.fullname
-        }}</Avatar>
+        <Avatar
+          :src="blog?.poster.getPhotoUrl()"
+          :name="blog?.poster.fullName"
+        />
       </div>
-      {{ card?.content }}
+      {{ blog?.content }}
     </section>
 
     <section class="comments">
       <div class="commentTitle">Reageersels</div>
-      <div class="comment" v-for="comment in comments">
+      <div class="comment" v-for="comment in blog?.comments || []">
         <div>
-          {{ comment.content }}
-          <div class="author">{{ comment.user.fullname }}</div>
+          {{ comment.comment }}
+          <div class="author">{{ comment.poster.fullName }}</div>
         </div>
         <div class="actions">
-          <Button size="tiny" icon="celebration"> {{ comment.likes }}</Button>
-          <Button size="tiny" icon="edit" />
-          <Button size="tiny" icon="delete" />
+          <Button
+            v-if="User.isOwner(comment.poster.userId)"
+            size="tiny"
+            icon="delete"
+            state="destructive"
+            @click="blog?.deleteComment(nuxtApp, comment.id)"
+          />
         </div>
       </div>
 
@@ -50,6 +61,7 @@
           size="large"
           placeholder="nieuw reactie"
           :minRows="2"
+          ref="textAreaRef"
           v-model="newComment"
         />
       </div>
@@ -57,15 +69,20 @@
 
     <section class="actionButtons bottomActions">
       <Button
-        v-if="canShare"
+        v-if="blog?.canShare()"
         size="small"
         state="primary"
         icon="share"
-        @click="share"
+        @click="blog?.share"
       >
         Delen
       </Button>
-      <Button size="small" state="primary" icon="celebration" @click="like">
+      <Button
+        size="small"
+        :state="likedState"
+        icon="celebration"
+        @click="blog?.toggleLike(nuxtApp)"
+      >
         {{ likes }}
       </Button>
       <Button size="small" icon="reply" @click="comment">Reageer</Button>
@@ -73,83 +90,42 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
-import Avatar from "./../Avatar.vue";
-import Button from "./../Button.vue";
-import Textarea from "./../inputs/Textarea.vue";
-import type { Card as CardType } from "./../../types/card";
+<script setup lang="ts">
+import { NuxtApp } from '../../models/nuxtApp';
+import { User } from './../../models/user';
+import { Blog } from './../../models/posts/blogs';
 
-export default defineComponent({
-  name: "BlogOpen",
-  components: {
-    Avatar,
-    Button,
-    Textarea,
-  },
-  props: {
-    card: {
-      type: Object as PropType<CardType>,
-    },
-  },
-  setup(props, { emit }) {
-    const { $user } = useNuxtApp();
-    const backToNewsfeed = () => emit("clickBackToNews");
-    const edit = () => emit("clickEdit");
+import Avatar from './../Avatar.vue';
+import Button from './../Button.vue';
+import Textarea from './../inputs/Textarea.vue';
 
-    const canShare = ref(false);
-    const comments = ref(props.card?.comments || []);
-    const newComment = ref("");
+const props = defineProps<{
+  blog: Blog;
+}>();
 
-    const share = async (e: Event) => {
-      if (!e || !navigator || !navigator.share) return;
+const nuxtApp = useNuxtApp() as unknown as NuxtApp;
+const newComment = ref('');
+const textAreaRef = ref();
 
-      const shareData = {
-        title: props.card?.header,
-        text: props.card?.content,
-        url: "localhost:8000",
-      };
+const comment = async () => {
+  await props.blog?.comment(nuxtApp, newComment.value);
+  textAreaRef.value?.clearTextarea();
+};
 
-      (await navigator?.share) && navigator.share(shareData);
-    };
-    const like = () => console.log("like");
-    const comment = (e: Event) => {
-      console.log(newComment.value);
-      if (!e || !newComment.value) return; // if no comment content -> no comment
+const likedState = computed(() => {
+  const likedBy = Array.from(props.blog?.likedBy || []);
+  const { $user } = useNuxtApp() as unknown as NuxtApp;
 
-      const newCommentObj = {
-        id: 123,
-        user: $user,
-        likes: 1,
-        content: newComment.value,
-      };
+  if (!$user?.value) return 'default';
+  if (!likedBy.includes($user.value.userId)) return 'default';
+  return 'primary';
+});
 
-      comments.value.push(newCommentObj);
-      newComment.value = "";
-    };
-
-    const likes = computed(() => {
-      if (!props.card) return "like";
-      if (props.card.likes == 1) return props.card.likes + " like";
-      return props.card.likes + " likes";
-    });
-
-    onMounted(() => {
-      if (!!navigator?.share) canShare.value = true; // init canShare
-    });
-
-    return {
-      backToNewsfeed,
-      edit,
-      like,
-      likes,
-      share,
-      canShare,
-      comment,
-      comments,
-      newComment,
-    };
-  },
+const likes = computed(() => {
+  if (!props.blog) return 'like';
+  if (props.blog.likedBy.length == 1)
+    return props.blog.likedBy.length + ' kudo';
+  return props.blog.likedBy.length + ' kudos';
 });
 </script>
 

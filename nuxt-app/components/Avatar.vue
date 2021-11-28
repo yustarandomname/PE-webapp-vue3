@@ -1,17 +1,17 @@
 <template>
   <div class="avatar" :class="classes" @click="emitClick">
-    <slot>{{ name }}</slot>
+    <slot>{{ firstName }}</slot>
     <img :src="src" :alt="alt" @error="replaceByDefault" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from "vue";
+import { defineComponent, computed, PropType } from 'vue';
 
-type AvatarSize = "small" | "medium" | "large";
-type AvatarAlign = "left" | "right" | "top" | "bottom";
+type AvatarSize = 'small' | 'medium' | 'large';
+type AvatarAlign = 'left' | 'right' | 'top' | 'bottom';
 const defaultSrc =
-  "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg";
+  'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg';
 
 export default defineComponent({
   props: {
@@ -21,35 +21,40 @@ export default defineComponent({
     },
     alt: {
       type: String as PropType<string>,
-      default: "avatar",
+      default: 'avatar',
     },
     size: {
       type: String as PropType<AvatarSize>,
-      default: "medium",
+      default: 'medium',
     },
     align: {
       type: String as PropType<AvatarAlign>,
-      default: "left",
+      default: 'left',
     },
     name: {
       type: String as PropType<string>,
-      default: "",
+      default: '',
     },
   },
   setup(props, { emit }) {
+    const firstName = computed(() => {
+      const name = props.name.split(' ');
+      return name[0];
+    });
+
     const classes = computed(() => {
       const classObject: { [key: string]: boolean } = {};
-      classObject["size-" + props.size] = !!props.size;
-      classObject["align-" + props.align] = !!props.align;
+      classObject['size-' + props.size] = !!props.size;
+      classObject['align-' + props.align] = !!props.align;
       return classObject;
     });
 
     const replaceByDefault = (e: Event) =>
       ((e.target as HTMLImageElement).src = defaultSrc);
 
-    const emitClick = () => emit("click");
+    const emitClick = () => emit('click');
 
-    return { classes, emitClick, replaceByDefault };
+    return { classes, emitClick, replaceByDefault, firstName };
   },
 });
 </script>

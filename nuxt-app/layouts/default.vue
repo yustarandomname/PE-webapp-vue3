@@ -10,14 +10,21 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { setupAuth, refreshUser } from './../util/authentication';
-import type { user } from '../types/user';
+import { User, UserInterface } from './../models/user';
 
 export default defineComponent({
   name: 'defaultNavigationBar',
   inheritAttrs: false, // workaround for nuxt3 (warning) bug
   setup() {
     const nuxtApp = useNuxtApp();
-    const loginError = ref<string | undefined>(undefined);
+    const loginError = ref<string>();
+
+    const user = computed(() => {
+      const user = nuxtApp.$user.value as UserInterface;
+      if (!user) return;
+
+      return new User(user);
+    });
 
     setupAuth(nuxtApp, loginError);
 
@@ -25,7 +32,7 @@ export default defineComponent({
 
     return {
       authenticated: nuxtApp.$authenticated as boolean,
-      user: nuxtApp.$user as user,
+      user,
       loginError,
     };
   },

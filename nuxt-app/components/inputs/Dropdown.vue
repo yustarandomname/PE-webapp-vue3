@@ -7,54 +7,29 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script setup lang="ts">
+const props = defineProps<{
+  label: string;
+  options: string[];
+  modelValue: string;
+  disabled: boolean;
+  size: 'small' | 'medium' | 'large';
+}>();
+const emit = defineEmits(['update:modelValue']);
 
-export default defineComponent({
-  name: "Dropdown",
-  props: {
-    label: {
-      type: String as PropType<string>,
-      default: "",
-    },
-    options: {
-      type: Array as PropType<string[]>,
-      default: () => [],
-    },
-    modelValue: {
-      type: String as PropType<string>,
-      default: "",
-    },
-    disabled: {
-      type: Boolean as PropType<boolean>,
-      default: false,
-    },
-    size: {
-      type: String as PropType<"small" | "medium" | "large">,
-      default: "medium",
-    },
+const classes = computed(() => {
+  const classes: { [key: string]: boolean } = {};
+  classes['size-' + props.size] = !!props.size;
+  classes['disabled'] = props.disabled;
+  return classes;
+});
+
+const input = computed({
+  get() {
+    return props.modelValue as string;
   },
-  setup(props, { emit }) {
-    const classes = computed(() => {
-      const classes: { [key: string]: boolean } = {};
-      classes["size-" + props.size] = !!props.size;
-      classes["disabled"] = props.disabled;
-      return classes;
-    });
-
-    const input = computed({
-      get() {
-        return props.modelValue as string;
-      },
-      set(value: string) {
-        emit("update:modelValue", value);
-      },
-    });
-
-    return {
-      classes,
-      input,
-    };
+  set(value: string) {
+    emit('update:modelValue', value);
   },
 });
 </script>

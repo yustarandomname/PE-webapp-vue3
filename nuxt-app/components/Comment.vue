@@ -1,13 +1,13 @@
 <template>
   <div class="commentWrapper">
     <div class="comment">
-      <div class="content">{{ comment.content }}</div>
-      <NuxtLink class="postedBy" :to="comment.user.url">{{
-        comment.user.fullname
+      <div class="content">{{ comment.comment }}</div>
+      <NuxtLink class="postedBy" :to="comment.poster.userId">{{
+        comment.poster.firstName
       }}</NuxtLink>
     </div>
     <div class="actions">
-      <ion-icon icon="return-down-back-outline" />
+      <ion-icon icon="retu rn-down-back-outline" />
       <ion-icon icon="thumbs-up-outline" />
       <ion-icon v-if="true" class="iconClose" icon="trash-outline" />
     </div>
@@ -15,12 +15,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType } from 'vue';
 
-import type { Comment } from "./../types/card";
+import { Comment } from './../models/posts/comment';
 
 export default defineComponent({
-  name: "Comment",
+  name: 'Comment',
   props: {
     comment: {
       type: Object as PropType<Comment>,
@@ -47,7 +47,6 @@ export default defineComponent({
       color: var(--grey-color-700);
       font-size: var(--small);
     }
-
   }
 
   & .actions {
