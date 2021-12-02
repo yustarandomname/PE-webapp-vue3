@@ -15,22 +15,19 @@ import Modal from './Modal.vue';
 import Input from './inputs/Input.vue';
 import Button from './Button.vue';
 
-const props = defineProps({
-  error: {
-    type: String,
-  },
-});
-const nuxtApp = useNuxtApp();
+const { $signIn } = useNuxtApp();
 
 const loading = ref(false);
 const email = ref('');
 const password = ref('');
+const error = ref('');
 
 const login = async (e: Event) => {
   if (!e || e.type != 'submit' || !loading) return;
 
   loading.value = true;
-  await nuxtApp.$signIn(email.value, password.value);
+  const { data } = await $signIn(email.value, password.value);
+  error.value = data.error || '';
   loading.value = false;
 };
 </script>

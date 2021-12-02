@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
 
-type AvatarSize = 'small' | 'medium' | 'large';
+type AvatarSize = 'small' | 'medium' | 'large' | 'huge';
 type AvatarAlign = 'left' | 'right' | 'top' | 'bottom';
 
 const props = defineProps({
@@ -76,6 +76,10 @@ const emitClick = () => emit('click');
 
   // IMAGE SIZE
   &.size- {
+    &huge > img {
+      --size: 15rem;
+    }
+
     &large > img {
       --size: 4rem;
     }

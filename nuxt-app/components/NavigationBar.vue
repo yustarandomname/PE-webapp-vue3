@@ -5,10 +5,10 @@
         <div class="logo"></div>
       </NuxtLink>
       <Avatar
-        v-if="user?.fullName || user?.photoMetaData"
-        :src="user.getPhotoUrl()"
+        v-if="$user?.value"
+        :src="$user.value.getPhotoUrl()"
         @click="toggleMenu"
-        :name="user.fullName"
+        :name="$user.value.fullName"
       />
     </div>
 
@@ -21,17 +21,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { User } from './../models/user';
-import { PropType } from 'vue';
 
 import Avatar from './Avatar.vue';
 import Modal from './/Modal.vue';
 
-const props = defineProps({
-  user: {
-    type: Object as PropType<User>,
-  },
-});
 const nuxtApp = useNuxtApp();
 const menu = ref(false);
 

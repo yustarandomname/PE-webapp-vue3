@@ -13,7 +13,7 @@ export interface AllowedCategory {
 export interface UserInterface {
   userId: number;
   userEmail: string;
-  photoMetaData: PhotoMetaData;
+  photoMetaData?: PhotoMetaData;
   groups: { [key: number]: Group };
   fullName: string;
   firstName: string;
@@ -26,10 +26,6 @@ export interface UserInterface {
 export class User extends HasPhoto implements UserInterface {
   userId: number;
   userEmail: string;
-  photoMetaData: {
-    MEDIUM: string;
-    ORIGINAL: string;
-  };
   groups: { [key: number]: Group };
   fullName: string;
   firstName: string;
