@@ -10,6 +10,7 @@
     "nuxt3": "^3.0.0-27307420.6a25d3e"
   },
   "dependencies": {
+    "@tiptap/extension-underline": "^2.0.0-beta.22",
     "@tiptap/starter-kit": "^2.0.0-beta.145",
     "@tiptap/vue-3": "^2.0.0-beta.81",
     "axios": "^0.24.0",
