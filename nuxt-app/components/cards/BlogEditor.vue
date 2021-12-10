@@ -81,11 +81,13 @@ const log = (log: string) => console.log(log);
 
   &.bottomActions {
     justify-content: end;
+    margin-bottom: 5rem;
   }
 }
 
 .image {
   width: var(--width-large);
+  max-width: 90vw;
   height: 15rem;
   background-size: cover !important;
   background-position: center !important;
