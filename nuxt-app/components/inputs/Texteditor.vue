@@ -26,9 +26,21 @@ import { useEditor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: '<h1>Titel</h1><p>I’m running Tiptap <b>with</b> Vue.js. 🎉</p>',
+  },
+});
+
+const emit = defineEmits(['update:modelValue']);
+
 const editor = useEditor({
-  content: '<p>I’m running Tiptap <b>with</b> Vue.js. 🎉</p>',
+  content: props.modelValue,
   extensions: [StarterKit, Underline],
+  onUpdate: () => {
+    emit('update:modelValue', editor.value.getHTML());
+  },
 });
 
 const chainedCmd = computed(() => editor.value.chain().focus());
@@ -161,7 +173,6 @@ const editorButtons = [
     }
 
     &.disabled {
-      // TODO: make inactive buttons inactive
       --color: var(--grey-color-200);
       --bg: transparent;
     }

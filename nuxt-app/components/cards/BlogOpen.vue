@@ -14,8 +14,9 @@
         size="small"
         icon="edit"
         @click="$emit('clickEdit')"
-        >Aanpassen</Button
       >
+        Aanpassen
+      </Button>
     </section>
 
     <section

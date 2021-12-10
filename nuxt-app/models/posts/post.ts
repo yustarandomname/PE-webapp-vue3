@@ -34,7 +34,7 @@ export interface PostInterface {
   poster: Poster;
   content: string;
   posterType: 'user' | 'group';
-  category: { id: number; name: string };
+  category?: { id: number; name: string };
   comments: Comment[];
   likedBy: number[];
   photoMetaData?: PhotoMetaData;
@@ -42,7 +42,6 @@ export interface PostInterface {
   updatedAt: string;
   datePosted: string;
   type?: PostType;
-  endpoint: string;
 }
 
 export abstract class Post extends HasPhoto implements PostInterface {
@@ -51,7 +50,7 @@ export abstract class Post extends HasPhoto implements PostInterface {
   poster: Poster;
   content: string;
   posterType: 'user' | 'group';
-  category: { id: number; name: string };
+  category?: { id: number; name: string };
   comments: Comment[];
   likedBy: number[];
   createdAt: string;
