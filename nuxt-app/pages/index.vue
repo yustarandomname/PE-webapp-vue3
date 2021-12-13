@@ -1,5 +1,14 @@
 <template>
-  <div>
+  <div class="posts">
+    <ActionButtons rightAlign>
+      <Button
+        size="small"
+        state="primary"
+        icon="edit"
+        @click="$router.push('/cards/nieuweblog')"
+        >Nieuwe blog schrijven</Button
+      >
+    </ActionButtons>
     <InfiniteList @fetch="fetchItems" :autoLoad="true">
       <template #default="post">
         <!-- {{ post.canShare() }} -->
@@ -65,6 +74,10 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+.posts {
+  margin: var(--margin-huge) 0;
+}
+
 .openCardWrapper {
   position: fixed;
   width: 100vw;

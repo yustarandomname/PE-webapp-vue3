@@ -1,19 +1,19 @@
 <template>
-  <BlogEditor :blog="blog" />
+  <BlogEditor :blog="blog" @back="$router.push('/')" />
 </template>
 
 <script setup lang="ts">
-import { Blog } from './../models/posts/blogs';
-import { PostInterface, Poster } from './../models/posts/post';
-import BlogEditor from './../components/cards/BlogEditor.vue';
+import { Blog } from './../../models/posts/blogs';
+import { PostInterface, Poster } from './../../models/posts/post';
+import BlogEditor from '@/components/cards/BlogEditor.vue';
 
 const poster = new Poster(0, 'test123', null, { ORIGINAL: '', MEDIUM: '' });
 
 const post: PostInterface = {
   id: 0,
-  title: '',
+  title: 'Titel',
   poster,
-  content: '',
+  content: '<p>content</p>',
   posterType: 'user',
   comments: [],
   likedBy: [],

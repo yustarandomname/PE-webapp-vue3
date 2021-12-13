@@ -16,9 +16,9 @@
         />
       </div>
 
-      <Button class="insertButton" size="small" @click="insertTable"
-        >Tabel invoegen</Button
-      >
+      <Button class="insertButton" size="small" @click="insertTable">
+        Tabel invoegen
+      </Button>
     </div>
     <editor-content :editor="editor" />
   </Container>

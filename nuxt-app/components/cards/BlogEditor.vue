@@ -5,12 +5,14 @@
         size="small"
         state="primary"
         icon="arrow_back"
-        @click="log('terug naar jou blogs')"
+        @click="$emit('back')"
       >
-        Terug naar jouw blogs
+        Terug naar blogs
       </Button>
+
+      <!--TODO: add this capibility -->
       <Button
-        v-if="true"
+        v-if="false"
         size="small"
         icon="edit"
         @click="log('open popup toegang aanpassen')"
@@ -24,8 +26,9 @@
         size="small"
         icon="file_upload"
         @click="log('upload new image')"
-        >Andere afbeelding...</Button
       >
+        Andere afbeelding...
+      </Button>
     </div>
 
     <Texteditor v-model="rawText" />
@@ -35,18 +38,20 @@
         size="small"
         state="destructive"
         icon="delete"
-        @click="log('Verwijderen')"
+        @click="$emit('delete')"
       >
         Verwijderen
       </Button>
-      <Button size="small" icon="cloud_upload" @click="log('opslaan')">
+
+      <Button
+        v-if="false"
+        size="small"
+        icon="cloud_upload"
+        @click="log('opslaan')"
+      >
         Opslaan
       </Button>
-      <Button
-        size="small"
-        state="primary"
-        icon="edit"
-        @click="log('open popup publiceren')"
+      <Button size="small" state="primary" icon="edit" @click="$emit('publish')"
         >Publiceren</Button
       >
     </section>
@@ -65,7 +70,14 @@ const props = defineProps({
   },
 });
 
-const rawText = ref('<h1>Hello world</h1><p>Dit is de eerste paragraaf</p>');
+// Make typescript aware of the emits
+defineEmits<{
+  (e: 'back'): void;
+  (e: 'delete'): void;
+  (e: 'publish'): void;
+}>();
+
+const rawText = ref(props.blog.getRawData());
 
 const log = (log: string) => console.log(log);
 </script>
