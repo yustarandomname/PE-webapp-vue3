@@ -1,6 +1,4 @@
 import { defineNuxtPlugin } from '#app';
-import { AxiosInstance } from 'axios';
-import { ref } from 'vue';
 import { User, UserInterface } from './../models/user';
 
 const user = ref<User>(undefined);
