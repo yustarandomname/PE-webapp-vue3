@@ -20,7 +20,6 @@ const publishBlog = async (title: string, content: string, image?: File) => {
   openedPost.value.title = title;
   openedPost.value.content = content;
   const { data } = await openedPost.value.save(image, 'PUT');
-  console.log(data);
   if (data) nuxtApp.$router.push('/');
 };
 

@@ -46,7 +46,7 @@ const publishBlog = async (title: string, content: string, image?: File) => {
   blog.title = title;
   blog.content = content;
 
-  const { data } = await blog.save(image);
-  if (data.status == 'ok') nuxtApp.$router.push('/');
+  const { data } = await blog.save(image, 'POST');
+  if (data) nuxtApp.$router.push('/');
 };
 </script>

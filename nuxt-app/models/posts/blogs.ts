@@ -49,7 +49,7 @@ export class Blog extends Post {
     const endpoint =
       method == 'PUT' ? `v1/news/items/${this.id}` : `v1/news/items`;
 
-    const { data } = await $httpClient(`v1/news/items/${this.id}`, {
+    const { data } = await $httpClient(endpoint, {
       method,
       data: newBlog,
     });
