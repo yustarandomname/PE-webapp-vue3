@@ -265,6 +265,30 @@ const actionButtonsFiltered = computed(() =>
   & h1 {
     margin: 0;
   }
+
+  // Placeholder voor title
+  & h1:first-of-type {
+    & br {
+      content: '';
+    }
+
+    & br:after {
+      content: 'Type hier een titel';
+      color: var(--grey-color-300);
+    }
+  }
+
+  // placeholder voor eerste content regel
+  & h1:first-of-type + * {
+    & br {
+      content: '';
+    }
+
+    & br:after {
+      content: 'Type hier een spectaculaire blog';
+      color: var(--grey-color-300);
+    }
+  }
 }
 
 /* Table-specific styling */

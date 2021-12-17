@@ -25,7 +25,7 @@ onMounted(async () => {
     return;
   }
 
-  blog.value = await Blog.fetchBlog(nuxtApp, id);
+  blog.value = await Blog.fetchBlog(id);
 });
 </script>
 

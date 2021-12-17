@@ -51,14 +51,16 @@
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue';
+
 const props = defineProps({
   imageUrl: {
     type: String,
     default: '',
   },
   modelValue: {
-    type: File,
-    default: null,
+    type: Object as PropType<File>,
+    required: false,
   },
   placeholder: {
     type: String,

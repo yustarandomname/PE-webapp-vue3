@@ -29,9 +29,9 @@ const poster = new Poster(
 );
 
 const post: PostInterface = {
-  title: 'Titel',
+  title: '',
   poster,
-  content: '<p>content</p>',
+  content: '<p></p>',
   posterType: 'user',
   comments: [],
   likedBy: [],
@@ -42,66 +42,11 @@ const post: PostInterface = {
 };
 const blog = new Blog(post);
 
-const uploadImage = async (image: File) => {
-  const formData = new FormData();
-  formData.append('photo', image);
+const publishBlog = async (title: string, content: string, image?: File) => {
+  blog.title = title;
+  blog.content = content;
 
-  const { data } = await nuxtApp.$httpClient('v1/upload-photo', {
-    method: 'POST',
-    headers: { 'content-type': 'multipart/form-data' },
-    data: formData,
-  });
-
-  if (data.status == 'ok') return { id: data.data.id, hash: data.data.hash };
-  return { id: null, hash: null };
-};
-
-const extractContent = (
-  content: string
-): { title?: string; content?: string } => {
-  const dom = new DOMParser().parseFromString(content, 'text/html');
-  const domTitle = dom.body.firstChild as HTMLHeadingElement;
-  const domContentBody = dom.body;
-  domContentBody.firstElementChild.remove();
-
-  if (domTitle?.tagName != 'H1') return; // todo show error
-  if (domTitle.textContent.length > 140) return; // todo show error
-
-  return { title: domTitle.textContent, content: domContentBody.innerHTML };
-};
-
-const publishBlog = async (content: string, image: File) => {
-  const newBlog: NewBlog = {
-    categoryId: 1,
-    title: '',
-    content: '',
-    posterType: poster.fullName ? 'user' : 'group',
-    posterId: poster.userId,
-  };
-
-  const extractedContent = extractContent(content);
-  if (!extractedContent.title) return;
-  newBlog.title = extractedContent.title;
-  newBlog.content = extractedContent.content;
-
-  // if image is changed, upload it
-  if (image.name) {
-    const { id, hash } = await uploadImage(image);
-    if (id && hash) {
-      newBlog.photoId = id;
-      newBlog.photoHash = hash;
-    }
-  }
-
-  console.log(newBlog);
-
-  const { data } = await nuxtApp.$httpClient('v1/news/items', {
-    method: 'POST',
-    data: newBlog,
-  });
-
-  if (data.status == 'ok') {
-    nuxtApp.$router.push('/');
-  }
+  const { data } = await blog.save(image);
+  if (data.status == 'ok') nuxtApp.$router.push('/');
 };
 </script>

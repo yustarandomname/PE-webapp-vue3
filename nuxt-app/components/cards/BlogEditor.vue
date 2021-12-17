@@ -43,12 +43,7 @@
       >
         Opslaan
       </Button>
-      <Button
-        size="small"
-        state="primary"
-        icon="edit"
-        @click="$emit('publish', rawText, newImage)"
-      >
+      <Button size="small" state="primary" icon="edit" @click="publishBlog">
         {{ edit ? 'Bewerken' : 'Publiceren' }}
       </Button>
     </section>
@@ -76,11 +71,29 @@ const props = defineProps({
 // Make typescript aware of the emits
 const emit = defineEmits<{
   (e: 'delete'): void;
-  (e: 'publish', content: string, newImage: File): void;
+  (e: 'publish', title: string, content: string, newImage?: File): void;
 }>();
 
 const rawText = ref(props.blog.getRawData());
-const newImage = ref<File>(new File([], ''));
+const newImage = ref<File>();
+const uploadData = computed(() => {
+  const dom = new DOMParser().parseFromString(rawText.value, 'text/html');
+  const domTitle = dom.body.firstChild as HTMLHeadingElement;
+  const domContentBody = dom.body;
+  domContentBody.firstElementChild.remove();
+
+  if (domTitle?.tagName != 'H1') return; // TODO show error
+  if (domTitle.textContent.length > 140) return; // TODO show error
+
+  return { title: domTitle.textContent, content: domContentBody.innerHTML };
+});
+
+const publishBlog = () => {
+  const title = uploadData.value.title;
+  const content = uploadData.value.content;
+  const image = newImage?.value?.name ? newImage.value : null;
+  emit('publish', title, content, image);
+};
 
 const deleteBlog = () => {
   const { $removeConfirmMessage, $addConfirmMessage } = useNuxtApp();

@@ -57,7 +57,7 @@ watch(cardId, (newId, oldId) => {
 });
 
 const fetchItems = async (list: Ref<Post[]>, amount: number) => {
-  const newCards = await Blogs.fetchBlogs(nuxtApp);
+  const newCards = await Blogs.fetchBlogs();
 
   list.value = list.value.concat(newCards.posts);
 };
@@ -81,7 +81,7 @@ onBeforeMount(async () => {
   const cardId = nuxtApp.$router.currentRoute.value.query?.id;
 
   // Set card to open if url has an Id of a blog post
-  openedPost.value = cardId ? await Blog.fetchBlog(nuxtApp, cardId) : undefined;
+  openedPost.value = cardId ? await Blog.fetchBlog(cardId) : undefined;
 });
 
 onMounted(async () => {
