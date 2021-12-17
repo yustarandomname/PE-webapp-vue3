@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import BlogOpen from './../../components/cards/BlogOpen.vue';
+import BlogOpen from '@/components/cards/BlogOpen.vue';
 
 import { Blog } from './../../models/posts/blogs';
 

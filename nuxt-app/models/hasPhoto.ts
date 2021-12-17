@@ -8,6 +8,7 @@ export abstract class HasPhoto {
 
   constructor(photoMetaData?: PhotoMetaData) {
     this.photoMetaData = photoMetaData;
+    console.log(photoMetaData);
   }
 
   getPhotoUrl(size: 'ORIGINAL' | 'MEDIUM' = 'MEDIUM') {

@@ -51,9 +51,14 @@
       >
         Opslaan
       </Button>
-      <Button size="small" state="primary" icon="edit" @click="$emit('publish')"
-        >Publiceren</Button
+      <Button
+        size="small"
+        state="primary"
+        icon="edit"
+        @click="$emit('publish')"
       >
+        {{ edit ? 'Bewerken' : 'Publiceren' }}
+      </Button>
     </section>
   </div>
 </template>
@@ -66,6 +71,10 @@ import Texteditor from './../inputs/Texteditor.vue';
 const props = defineProps({
   blog: {
     type: Object as PropType<Blog>,
+    required: true,
+  },
+  edit: {
+    type: Boolean as PropType<boolean>,
     required: true,
   },
 });

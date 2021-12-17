@@ -27,7 +27,7 @@ const login = async (e: Event) => {
 
   loading.value = true;
   const { data } = await $signIn(email.value, password.value);
-  error.value = data.error || '';
+  error.value = data?.error || '';
   loading.value = false;
 };
 </script>

@@ -21,7 +21,11 @@
     </InfiniteList>
 
     <div v-if="openedPost" class="openCardWrapper">
-      <BlogOpen :blog="openedPost" @clickBackToNews="backToNewsfeed" />
+      <BlogOpen
+        :blog="openedPost"
+        @clickBackToNews="backToNewsfeed"
+        @clickEdit="editOpenedBlog"
+      />
     </div>
   </div>
 </template>
@@ -38,6 +42,20 @@ import { Blog, Blogs } from './../models/posts/blogs';
 const nuxtApp = useNuxtApp();
 const openedPost = ref<Post>();
 
+const cardId = computed(() => {
+  const id = nuxtApp.$router.currentRoute.value.query?.id;
+  return parseInt(id) || -1;
+});
+
+watch(cardId, (newId, oldId) => {
+  if (newId === oldId) return;
+
+  if (newId === -1) {
+    openedPost.value = undefined;
+    return;
+  }
+});
+
 const fetchItems = async (list: Ref<Post[]>, amount: number) => {
   const newCards = await Blogs.fetchBlogs(nuxtApp);
 
@@ -52,9 +70,11 @@ const openPost = (post: Post) => {
   nuxtApp.$router.push(nextURL);
 };
 
-const backToNewsfeed = () => {
-  openedPost.value = undefined;
-  nuxtApp.$router.push('/');
+const backToNewsfeed = () => nuxtApp.$router.push('/');
+
+const editOpenedBlog = () => {
+  const url = '/cards/aanpassenblog?id=' + openedPost.value.id;
+  nuxtApp.$router.push(url);
 };
 
 onBeforeMount(async () => {

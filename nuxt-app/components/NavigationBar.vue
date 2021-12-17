@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="navigationBar">
-      <NuxtLink to="./">
+      <NuxtLink to="/">
         <div class="logo"></div>
       </NuxtLink>
       <Avatar

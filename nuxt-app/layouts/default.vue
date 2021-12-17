@@ -1,11 +1,14 @@
 <template>
+  <!-- Navigation bar -->
   <NavigationBar>
     <template #menu> </template>
   </NavigationBar>
 
+  <!-- If user is authenticated -> show content | else -> show login screen -->
   <slot v-if="authenticated" />
   <Login v-else />
 
+  <!-- If there are any confirmation messages to be displayed -> display them -->
   <div class="confirmationMessages" v-if="$confirmMessages">
     <ConfirmMessage
       v-for="message in $confirmMessages.value"
