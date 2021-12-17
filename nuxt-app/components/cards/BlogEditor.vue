@@ -82,7 +82,7 @@ const uploadData = computed(() => {
   const domContentBody = dom.body;
   domContentBody.firstElementChild.remove();
 
-  if (domTitle?.tagName != 'H1') return; // TODO show error
+  if (domTitle?.tagName) return; // TODO show error
   if (domTitle.textContent.length > 140) return; // TODO show error
 
   return { title: domTitle.textContent, content: domContentBody.innerHTML };
