@@ -24,7 +24,8 @@ type ButtonState =
   | 'primary'
   | 'secondary'
   | 'disabled'
-  | 'destructive';
+  | 'destructive'
+  | 'link';
 
 const props = defineProps({
   icon: {
@@ -62,20 +63,20 @@ const classes = computed(() => {
 
 <style scoped lang="scss">
 button {
-  --color: var(--grey-color-200);
+  --color: var(--white-color);
   --bg: var(--grey-color-900);
 
   position: relative;
   all: unset;
   min-width: 20rem;
   max-width: 90vw;
-  height: 3em;
+  // height: 3em;
   color: var(--color);
   background: var(--bg);
-  border-radius: var(--corner-radius);
+  border-radius: var(--button-radius);
   cursor: pointer;
-  transform: scale(1);
-  transition: transform 0.2s, opacity 0.2s;
+  // transform: scale(1);
+  // transition: transform 0.2s, opacity 0.2s;
 
   & > div {
     display: flex;
@@ -86,8 +87,9 @@ button {
 
   // STATES
   &.state-primary {
-    --bg: var(--primary-color);
+    --bg: var(--primary-color-400);
   }
+
   &.state-success {
     --bg: var(--secondary-color);
     --color: var(--grey-color-900);
@@ -97,6 +99,11 @@ button {
     --bg: var(--destructive-color-200) !important;
     --color: var(--destructive-color-900) !important;
     opacity: 0.6;
+  }
+
+   &.state-link {
+    --bg: var(--transparent-color);
+    --color: var(--grey-color-900);
   }
 
   // TOOLTIPS
@@ -123,16 +130,18 @@ button {
 
   /* SIZE */
   &.size-tiny {
-    height: 2.5rem;
+    height: 40px;
     min-width: max-content;
     padding: 0 var(--padding-small);
-    font-size: 0.8rem;
+    // font-size: 0.8rem;
+    font-size: var(--small);
   }
   &.size-small {
-    height: 2.5rem;
+    height: 40px;
     min-width: max-content;
     padding: 0 var(--padding-medium);
-    font-size: 0.8rem;
+    font-size: var(--small);
+    // font-size: 0.8rem;
   }
   &.size-large {
     height: 3rem;
@@ -141,7 +150,7 @@ button {
   }
 
   &:hover {
-    transform: scale(1.05);
+    // transform: scale(1.05);
     opacity: 1;
 
     &.size-tiny {

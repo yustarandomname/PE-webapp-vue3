@@ -128,7 +128,7 @@ const emitIconClick = () => {
 
   & label {
     position: relative;
-    background: var(--grey-color-200);
+    background: var(--grey-color-100);
     border-radius: var(--inner-corner-radius);
     display: flex;
     align-items: center;
@@ -136,9 +136,9 @@ const emitIconClick = () => {
     & .label {
       position: absolute;
       left: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      transition: 0.2s;
+      // top: 50%;
+      // transform: translateY(-50%);
+      // transition: 0.2s;
       color: var(--grey-color-700);
       font-size: var(--small);
     }
@@ -164,9 +164,9 @@ const emitIconClick = () => {
   }
   &.focusIn {
     & .label {
-      left: 0rem;
-      top: -1.1rem;
-      transform: translateY(0);
+      // left: 0rem;
+      // top: -1.1rem;
+      // transform: translateY(0);
     }
   }
   &.disabled {
