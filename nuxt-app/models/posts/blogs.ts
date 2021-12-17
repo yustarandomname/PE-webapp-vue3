@@ -14,6 +14,10 @@ export class Blog extends Post {
 
     return new Blog(data.data);
   }
+
+  getRawData(): string {
+    return `<h1>${this.title}</h1>${this.content}`;
+  }
 }
 
 export class Blogs extends Posts {
