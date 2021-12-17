@@ -52,6 +52,7 @@ const props = defineProps({
 
 const classes = computed(() => {
   const classObj: { [key: string]: boolean } = {};
+  classObj['button'] = true;
   classObj['disabled'] = !!props.disabled || !!props.loading;
   classObj['size-' + props.size] = !!props.size;
   classObj['state-' + props.state] = !!props.state;
@@ -60,13 +61,14 @@ const classes = computed(() => {
 });
 </script>
 
-<style scoped lang="scss">
-button {
+<style lang="scss">
+.button {
   --color: var(--grey-color-200);
   --bg: var(--grey-color-900);
 
-  position: relative;
   all: unset;
+  display: block;
+  position: relative;
   min-width: 20rem;
   max-width: 90vw;
   height: 3em;

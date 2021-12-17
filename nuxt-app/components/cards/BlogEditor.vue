@@ -5,7 +5,7 @@
         size="small"
         state="primary"
         icon="arrow_back"
-        @click="$emit('back')"
+        @click="$router.push('/')"
       >
         Terug naar blogs
       </Button>
@@ -20,16 +20,7 @@
       >
     </section>
 
-    <div class="image" :style="'background: url(' + blog?.getPhotoUrl() + ')'">
-      <Button
-        class="uploadButton"
-        size="small"
-        icon="file_upload"
-        @click="log('upload new image')"
-      >
-        Andere afbeelding...
-      </Button>
-    </div>
+    <Image v-model="imageUrl" />
 
     <Texteditor v-model="rawText" />
 
@@ -38,7 +29,7 @@
         size="small"
         state="destructive"
         icon="delete"
-        @click="$emit('delete')"
+        @click="deleteBlog"
       >
         Verwijderen
       </Button>
@@ -64,8 +55,10 @@
 </template>
 
 <script setup lang="ts">
+import { Message } from './../../models/confirmMessage';
 import { Blog } from './../../models/posts/blogs';
 import { PropType } from 'vue';
+import Image from '@/components/inputs/Image.vue';
 import Texteditor from './../inputs/Texteditor.vue';
 
 const props = defineProps({
@@ -75,18 +68,38 @@ const props = defineProps({
   },
   edit: {
     type: Boolean as PropType<boolean>,
-    required: true,
+    default: false,
   },
 });
 
 // Make typescript aware of the emits
-defineEmits<{
-  (e: 'back'): void;
+const emit = defineEmits<{
   (e: 'delete'): void;
   (e: 'publish'): void;
 }>();
 
+const deleteBlog = () => {
+  const { $removeConfirmMessage, $addConfirmMessage } = useNuxtApp();
+
+  const confirmMessage: Message = {
+    title: 'Heel zeker?',
+    content: 'Weet je zeker dat je deze blog wilt verwijderen?',
+    hasCancelButton: true,
+    cancelButtonText: 'Niet verwijderen',
+    acceptButton: {
+      text: 'Ja heel zeker!',
+      action: () => {
+        emit('delete');
+        $removeConfirmMessage(confirmMessage);
+      },
+    },
+  };
+
+  $addConfirmMessage(confirmMessage);
+};
+
 const rawText = ref(props.blog.getRawData());
+const imageUrl = ref(props.blog.getPhotoUrl());
 
 const log = (log: string) => console.log(log);
 </script>
