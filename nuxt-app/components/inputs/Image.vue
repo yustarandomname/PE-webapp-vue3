@@ -4,7 +4,7 @@
     <div
       class="preview"
       v-if="imageUrl"
-      :style="{ background: 'url(' + imageUrl + ')' }"
+      :style="{ background: 'url(' + previewUrl + ')' }"
     >
       <div class="reuploadActions">
         <Button
@@ -52,7 +52,14 @@
 
 <script setup lang="ts">
 const props = defineProps({
-  modelValue: String,
+  imageUrl: {
+    type: String,
+    default: '',
+  },
+  modelValue: {
+    type: File,
+    default: null,
+  },
   placeholder: {
     type: String,
     default: 'Afbeelding uploaden',
@@ -60,17 +67,18 @@ const props = defineProps({
 });
 const emit = defineEmits(['update:modelValue']);
 
-const imageUrl = ref<String>(props.modelValue);
+const previewUrl = ref<String>(props.imageUrl);
 
 const updateImage = (event: Event) => {
   const files = (event.target as HTMLInputElement).files;
-  imageUrl.value = files?.[0] ? URL.createObjectURL(files[0]) : '';
-  emit('update:modelValue', imageUrl.value);
+  previewUrl.value = files?.[0] ? URL.createObjectURL(files[0]) : '';
+  console.log({ files, url: previewUrl.value });
+  emit('update:modelValue', files[0]);
 };
 
 const removeImage = () => {
-  imageUrl.value = '';
-  emit('update:modelValue', '');
+  previewUrl.value = '';
+  emit('update:modelValue', null);
 };
 </script>
 

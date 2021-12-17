@@ -16,11 +16,12 @@
         size="small"
         icon="edit"
         @click="log('open popup toegang aanpassen')"
-        >Toegang aanpassen</Button
       >
+        Toegang aanpassen
+      </Button>
     </section>
 
-    <Image v-model="imageUrl" />
+    <Image :imageUrl="blog?.getPhotoUrl()" v-model="newImage" />
 
     <Texteditor v-model="rawText" />
 
@@ -46,7 +47,7 @@
         size="small"
         state="primary"
         icon="edit"
-        @click="$emit('publish')"
+        @click="$emit('publish', rawText, newImage)"
       >
         {{ edit ? 'Bewerken' : 'Publiceren' }}
       </Button>
@@ -75,8 +76,11 @@ const props = defineProps({
 // Make typescript aware of the emits
 const emit = defineEmits<{
   (e: 'delete'): void;
-  (e: 'publish'): void;
+  (e: 'publish', content: string, newImage: File): void;
 }>();
+
+const rawText = ref(props.blog.getRawData());
+const newImage = ref<File>(new File([], ''));
 
 const deleteBlog = () => {
   const { $removeConfirmMessage, $addConfirmMessage } = useNuxtApp();
@@ -97,9 +101,6 @@ const deleteBlog = () => {
 
   $addConfirmMessage(confirmMessage);
 };
-
-const rawText = ref(props.blog.getRawData());
-const imageUrl = ref(props.blog.getPhotoUrl());
 
 const log = (log: string) => console.log(log);
 </script>

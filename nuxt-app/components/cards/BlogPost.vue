@@ -1,14 +1,16 @@
 <template>
   <div
     class="blogCard"
-    :class="{ loading: !blog, noImage: !blog?.photoMetaData?.ORIGINAL }"
+    :class="{ loading: !blog, noImage: !imageStyles }"
     @click="$emit('click')"
   >
     <div class="header">{{ blog?.title }}</div>
     <div class="datePosted">{{ blog?.datePosted }}</div>
-    <div class="content" :class="{ loadingContent: !blog?.content }">
-      {{ blog?.content }}
-    </div>
+    <div
+      class="content"
+      :class="{ loadingContent: !blog?.content }"
+      v-html="blog?.content"
+    />
 
     <div class="image" :style="imageStyles"></div>
 
@@ -42,7 +44,11 @@ const imageStyles = computed(() => {
   if (!props.blog) return { background: 'var(--grey-color-200)' };
   if (!props.blog.photoMetaData) return;
 
-  return { background: `url(${props.blog.getPhotoUrl()})` };
+  console.log(props.blog.photoMetaData);
+  const imageUrl = props.blog?.getPhotoUrl?.();
+  if (!imageUrl) return;
+
+  return { background: `url(${imageUrl})` };
 });
 
 const categoryList = computed(() => {
@@ -140,6 +146,7 @@ const categoryList = computed(() => {
 
     & .content {
       min-height: unset;
+      max-height: 15rem;
     }
   }
 }

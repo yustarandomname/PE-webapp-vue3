@@ -36,7 +36,7 @@
           :name="blog?.poster.fullName"
         />
       </div>
-      {{ blog?.content }}
+      <div v-html="blog?.content" />
     </section>
 
     <section class="comments">

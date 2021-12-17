@@ -29,7 +29,7 @@ export type PostType = 'blog' | 'image' | 'video';
 
 // A card can be a blogpost, poll, photos etc.
 export interface PostInterface {
-  id: number;
+  id?: number;
   title: string;
   poster: Poster;
   content: string;
