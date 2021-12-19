@@ -57,7 +57,7 @@
   --corner-radius-large: 1rem;
   --corner-radius: 0.5rem;
   --corner-radius-small: 0.25rem;
-  --inner-corner-radius: var(--corner-radius-small);
+  --inner-corner-radius: 10px;
 
   /* WIDTH */
   --width-full: 100%;
@@ -91,8 +91,8 @@
   --padding-input: var(--padding-medium) var(--padding-small);
 
   /* MARGIN */
-  --margin-huge: 24px;
-  --margin-large: 16px;
+  --margin-huge: 40px;
+  --margin-large: 32px;
   --margin-medium: 12px;
   --margin-small: 8px;
   --margin-tiny: 4px;

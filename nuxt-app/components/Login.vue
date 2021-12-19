@@ -1,10 +1,10 @@
 <template>
   <Modal>
-    <!-- <template #header>Login</template> -->
+    <template #header></template>
     <div class="login-form">
       <form @submit.prevent="login">
-        <Input size="medium" label="email" v-model="email" />
-        <Input size="medium" label="password" type="password" v-model="password" />
+        <Input size="medium" label="Email" v-model="email" />
+        <Input size="medium" label="Wachtwoord" type="password" v-model="password"/>
         <div class="buttons">
           <Button state="link" size="small">Reset wachtwoord</Button>
           <Button state="primary" size="small" :loading="loading" @click="login">Login</Button>

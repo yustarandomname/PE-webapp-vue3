@@ -68,8 +68,8 @@ button {
 
   position: relative;
   all: unset;
-  min-width: 20rem;
-  max-width: 90vw;
+  // min-width: 20rem;
+  // max-width: 90vw;
   // height: 3em;
   color: var(--color);
   background: var(--bg);
@@ -81,7 +81,7 @@ button {
   & > div {
     display: flex;
     justify-content: center;
-    align-items: center;
+    // align-items: center;
     gap: var(--margin-small);
   }
 
@@ -149,14 +149,14 @@ button {
     min-width: unset;
   }
 
-  &:hover {
-    // transform: scale(1.05);
-    opacity: 1;
+  // &:hover {
+  //   // transform: scale(1.05);
+  //   opacity: 1;
 
-    &.size-tiny {
-      transform: scale(1.1);
-    }
-  }
+  //   &.size-tiny {
+  //     transform: scale(1.1);
+  //   }
+  // }
 }
 
 /* DISABLED */

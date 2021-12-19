@@ -4,10 +4,8 @@
       <Button
         size="small"
         state="primary"
-        icon="edit"
-        @click="$router.push('/cards/nieuweblog')"
-        >Nieuwe blog schrijven</Button
-      >
+        icon="add"
+        @click="$router.push('/cards/nieuweblog')">Nieuw bericht</Button>
     </ActionButtons>
     <InfiniteList @fetch="fetchItems" :autoLoad="true">
       <template #default="post">
