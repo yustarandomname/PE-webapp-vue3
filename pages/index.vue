@@ -33,7 +33,7 @@ import ActionButtons from '@/components/buttons/ActionButtons.vue';
 import MenuButtons from '@/components/buttons/MenuButtons.vue';
 import Button from '@/components/buttons/Button.vue';
 
-import { Post, PostInterface, Query } from '../models/post';
+import { Post, PostInterface, Query } from '../models/Post';
 
 const router = useRouter();
 const fromDate = computed(() => {
