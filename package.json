@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "start": "node .output/server/index.mjs"
+  },
+  "devDependencies": {
+    "nuxt3": "latest"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^1.28.5",
+    "@tiptap/core": "^2.0.0-beta.158",
+    "@tiptap/extension-table": "^2.0.0-beta.45",
+    "@tiptap/extension-table-cell": "^2.0.0-beta.20",
+    "@tiptap/extension-table-header": "^2.0.0-beta.22",
+    "@tiptap/extension-table-row": "^2.0.0-beta.19",
+    "@tiptap/extension-underline": "^2.0.0-beta.22",
+    "@tiptap/starter-kit": "^2.0.0-beta.163",
+    "@tiptap/vue-3": "^2.0.0-beta.84",
+    "google-libphonenumber": "^3.2.26",
+    "sass": "^1.45.0",
+    "sass-loader": "^12.4.0"
+  }
+}

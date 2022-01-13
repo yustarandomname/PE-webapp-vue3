@@ -1,10 +1,29 @@
-# PE-webapp-vue3
+# Nuxt 3 Minimal Starter
 
-🚧  PE webapp met Vue3. Zie [issues](https://github.com/Proteus-Eretes/PE-webapp-vue3/issues) voor wat er nog moet gebeuren.
+We recommend to look at the [documentation](https://v3.nuxtjs.org).
 
-## Om te beginnen
+## Setup
+
+Make sure to install the dependencies
+
 ```bash
-cd nuxt-app
 yarn install
-yarn dev -o
 ```
+
+## Development
+
+Start the development server on http://localhost:3000
+
+```bash
+yarn dev
+```
+
+## Production
+
+Build the application for production:
+
+```bash
+yarn build
+```
+
+Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment).
