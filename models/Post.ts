@@ -7,7 +7,7 @@ import TableCell from '@tiptap/extension-table-cell';
 import Underline from '@tiptap/extension-underline';
 
 import { Comment } from './comment';
-import { UserData, UserDataInterface } from './userData';
+import { UserData, UserDataInterface } from './UserData';
 import { nowDateString } from '~~/util/nowDateString';
 
 import { PostgrestFilterBuilder } from '@supabase/postgrest-js';

@@ -3,7 +3,7 @@ import type { Ref } from 'vue';
 import { SupabaseClient, User } from '@supabase/supabase-js';
 import useSupabase from './composables/useSupabase';
 
-import { UserData } from './models/userData';
+import { UserData } from './models/UserData';
 import { GroupData } from './models/GroupData';
 
 type UserOrGroup = { user?: UserData; group?: GroupData };

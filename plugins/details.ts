@@ -1,6 +1,6 @@
 import { defineNuxtPlugin } from '#app';
 import { GroupData } from '~~/models/GroupData';
-import { UserData } from '~~/models/userData';
+import { UserData } from '~~/models/UserData';
 
 type UserOrGroup = { user?: UserData; group?: GroupData };
 
