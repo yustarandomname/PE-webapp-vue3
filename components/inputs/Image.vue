@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { Post } from '@/models/post';
+import { Post } from '@/models/Post';
 import Button from '@/components/buttons/Button.vue';
 import UploadButton from '../buttons/UploadButton.vue';
 

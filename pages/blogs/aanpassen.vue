@@ -83,7 +83,7 @@ import Input from '~~/components/inputs/Input.vue';
 import Texteditor from '@/components/inputs/Texteditor.vue';
 import { Message } from '~~/models/confirmMessage';
 
-import { Post } from '~~/models/post';
+import { Post } from '~~/models/Post';
 import { GroupData } from '~~/models/GroupData';
 import { isUserOrInGroup } from '~~/util/queries/isUserOrInGroup';
 

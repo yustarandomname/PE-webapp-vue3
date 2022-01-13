@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { Post, Query } from '@/models/post';
+import { Post, Query } from '@/models/Post';
 import { nowDateString } from '@/util/nowDateString';
 import Button from '@/components/buttons/Button.vue';
 

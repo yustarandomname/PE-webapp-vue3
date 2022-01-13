@@ -60,7 +60,7 @@ import ActionButtons from '@/components/buttons/ActionButtons.vue';
 import Button from '@/components/buttons/Button.vue';
 import BlogPost from '@/components/blogs/BlogPost.vue';
 
-import { Query, Post, newEmptyBlog, PostInterface } from '@/models/post';
+import { Query, Post, newEmptyBlog, PostInterface } from '@/models/Post';
 import { isUserOrInGroup } from '~~/util/queries/isUserOrInGroup';
 
 const newPostLoading = ref(false);
