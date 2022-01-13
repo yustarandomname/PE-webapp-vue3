@@ -85,9 +85,15 @@ const insertNewPost = async () => {
 };
 
 const now = new Date().toISOString().toLocaleString();
-const wherePublished: Query = (q) => isUserOrInGroup(q).lt('publish_date', now);
-const whereUnpublished: Query = (q) =>
-  isUserOrInGroup(q).or('publish_date.is.null,publish_date.gt.' + now);
+const wherePublished = ref<Query>();
+const whereUnpublished = ref<Query>();
+
+onMounted(async () => {
+  const isUserOrInGroupFactory = await isUserOrInGroup();
+  wherePublished.value = isUserOrInGroupFactory;
+  whereUnpublished.value = (q) =>
+    isUserOrInGroupFactory(q).or('publish_date.is.null,publish_date.gt.' + now);
+});
 </script>
 
 <style scoped lang="scss">
