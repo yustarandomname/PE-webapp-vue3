@@ -54,4 +54,8 @@ export class User extends HasPhoto implements UserInterface {
 
     return ($user as Ref<UserInterface>)?.value?.userId == id;
   }
+
+  static getUserById(id?: number): Promise<User> {
+    return; // TODO: Implement
+  }
 }

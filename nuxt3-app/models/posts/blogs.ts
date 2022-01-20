@@ -1,3 +1,4 @@
+import { Method } from 'axios';
 import { useNuxtApp } from 'nuxt3';
 import { Post, Posts, PostInterface } from './post';
 
@@ -26,7 +27,7 @@ export class Blog extends Post {
     return new Blog(data.data);
   }
 
-  async save(image?: File, method = 'POST') {
+  async save(image?: File, method: Method = 'POST') {
     const { $httpClient } = useNuxtApp();
 
     const newBlog: NewBlog = {
@@ -77,15 +78,14 @@ export class Blogs extends Posts {
   static async fetchBlogs(
     amount: number = 10,
     offset: number = 0
-  ): Promise<Blogs> {
+  ): Promise<Blog[]> {
     const { $httpClient } = useNuxtApp();
     const { data } = await $httpClient('v1/news/items');
 
     // if status is not 200
-    if (data?.status != 'ok') return new Blogs([]);
+    if (data?.status != 'ok') return;
 
     // data: {status: 'ok', data: Post[]}
-    const blogs = data.data.map((post: Post) => new Blog(post));
-    return new Blogs(blogs);
+    return data.data.map((post: Post) => new Blog(post));
   }
 }

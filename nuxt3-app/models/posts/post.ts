@@ -41,6 +41,7 @@ export interface PostInterface {
   createdAt: string;
   updatedAt: string;
   datePosted: string;
+  publishDate?: string;
   type?: PostType;
 }
 
@@ -56,6 +57,7 @@ export abstract class Post extends HasPhoto implements PostInterface {
   createdAt: string;
   updatedAt: string;
   datePosted: string;
+  publishDate?: string;
   type: PostType;
   endpoint: string = 'news/items';
 
@@ -71,6 +73,7 @@ export abstract class Post extends HasPhoto implements PostInterface {
     this.likedBy = post.likedBy;
     this.createdAt = post.createdAt;
     this.updatedAt = post.updatedAt;
+    this.publishDate = post.publishDate;
 
     this.poster = new Poster(
       post.poster.userId,
@@ -82,13 +85,24 @@ export abstract class Post extends HasPhoto implements PostInterface {
     this.datePosted = new Date(this.createdAt).toLocaleString();
   }
 
+  static formatDate(date: string): string {
+    if (!date || !new Date(date)) return 'Nog niet gepubliceerd';
+
+    const now = new Date();
+    const dateObj = new Date(date);
+    const toString = dateObj.toDateString();
+
+    if (dateObj > now) return 'Wordt gepubliceerd op ' + toString;
+    return toString;
+  }
+
   author(): string {
     if (this.poster === undefined) return 'Onbekend';
     return this.poster.fullName || this.poster.groupName || 'Onbekend';
   }
 
   // LIKES
-  like(): void {
+  like(): number[] {
     const nuxtApp = useNuxtApp();
     nuxtApp.$httpClient({
       method: 'POST',
@@ -96,9 +110,10 @@ export abstract class Post extends HasPhoto implements PostInterface {
     });
     const userId = nuxtApp.$user.value.userId;
     this.likedBy.push(userId);
+    return this.likedBy;
   }
 
-  unlike(): void {
+  unlike(): number[] {
     const nuxtApp = useNuxtApp();
     nuxtApp.$httpClient({
       method: 'DELETE',
@@ -106,19 +121,19 @@ export abstract class Post extends HasPhoto implements PostInterface {
     });
     const userId = nuxtApp.$user.value.userId;
     this.likedBy = this.likedBy.filter((id) => id !== userId);
+    return this.likedBy;
   }
 
-  toggleLike(): void {
+  toggleKudo(): number[] {
     const nuxtApp = useNuxtApp();
-    if (!nuxtApp?.$user?.value.userId) return console.log('no nuxtApp');
+    if (!nuxtApp?.$user?.value.userId) return [];
 
     const userId = nuxtApp.$user.value.userId;
     if (this.likedBy.includes(userId)) {
-      this.unlike();
-      return;
+      return this.unlike();
     }
 
-    this.like();
+    return this.like();
   }
 
   // COMMENTS
