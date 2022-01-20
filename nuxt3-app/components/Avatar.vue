@@ -54,20 +54,6 @@ const openDetail = (event) => {
   if (userData.value) $setDetail({ user: userData.value });
 };
 
-const loadUserData = async () => {
-  if (!props.userId) return;
-  const data = await User.getUserById(props.userId);
-  userData.value = data;
-
-  if (!data?.photoMetaData) return;
-  const profileUrl = await data.getPhotoUrl();
-  src.value = profileUrl ? profileUrl : src.value;
-};
-
-onMounted(() => {
-  if (props.userId) loadUserData();
-});
-
 const classes = computed(() => {
   const classObject: { [key: string]: boolean } = {};
   classObject['size-' + props.size] = !!props.size;

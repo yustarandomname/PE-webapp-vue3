@@ -21,9 +21,7 @@ import Avatar from './Avatar.vue';
 
 const userData = ref<User>();
 
-onMounted(async () => {
-  userData.value = await User.getUserById();
-});
+onMounted(() => {});
 </script>
 
 <style scoped lang="scss">

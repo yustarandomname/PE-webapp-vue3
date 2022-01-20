@@ -67,29 +67,6 @@ const itemsToLoad = ref(fetchAmount);
 const reachedBottom = ref(false);
 const lastDate = ref(props.fromDate || new Date()); // last date
 const itemsBefore = ref(0);
-
-const loadMore = async () => {
-  itemsToLoad.value = fetchAmount;
-
-  const posts = await Blogs.fetchBlogs();
-
-  if (!posts) return (itemsToLoad.value = 0);
-  if (posts.length == 0) {
-    reachedBottom.value = true;
-    itemsToLoad.value = 0;
-    return;
-  }
-
-  list.value = [...list.value, ...posts];
-  reachedBottom.value = posts.length < fetchAmount;
-  lastDate.value = new Date(posts[posts.length - 1].publishDate);
-
-  itemsToLoad.value = 0;
-};
-
-onMounted(async () => {
-  loadMore();
-});
 </script>
 
 <style scoped lang="scss">
