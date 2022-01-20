@@ -67,6 +67,10 @@ const itemsToLoad = ref(fetchAmount);
 const reachedBottom = ref(false);
 const lastDate = ref(props.fromDate || new Date()); // last date
 const itemsBefore = ref(0);
+
+const loadMore = () => {
+  console.log('load more');
+};
 </script>
 
 <style scoped lang="scss">
