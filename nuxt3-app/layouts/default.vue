@@ -1,10 +1,10 @@
 <template>
   <div>
-    <NavigationBar :key="$user?.value.userId">
+    <NavigationBar :key="$user?.value?.userId">
       <template #menu> </template>
     </NavigationBar>
 
-    <Login v-if="!$user" />
+    <Login v-if="!$user.value" />
     <slot v-else></slot>
 
     <div class="confirmationMessages" v-if="$confirmMessages">
