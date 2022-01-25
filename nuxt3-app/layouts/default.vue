@@ -1,9 +1,9 @@
 <template>
-  {{ $user }}
-
-  <!-- If user is authenticated -> show content | else -> show login screen -->
-  <slot v-if="authenticated"></slot>
-  <Login v-else />
+  <div>
+    <!-- If user is authenticated -> show content | else -> show login screen -->
+    <slot v-if="authenticated"></slot>
+    <Login v-else />
+  </div>
 </template>
 
 <script lang="ts">
