@@ -1,6 +1,9 @@
 <template>
-  <h1>this is the layout</h1>
-  <slot></slot>
+  {{ $user }}
+
+  <!-- If user is authenticated -> show content | else -> show login screen -->
+  <slot v-if="authenticated"></slot>
+  <Login v-else />
 </template>
 
 <script lang="ts">
@@ -13,15 +16,15 @@ export default {
 const authenticated = ref(false);
 
 onMounted(async () => {
-  // const { $initUser, $user } = useNuxtApp();
-  // $initUser();
-  // watch($user, () => {
-  //   if (!$user || !$user.value) {
-  //     authenticated.value = false;
-  //   } else {
-  //     authenticated.value = true;
-  //   }
-  // });
+  const { $initUser, $user } = useNuxtApp();
+  $initUser();
+  watch($user, () => {
+    if (!$user || !$user.value) {
+      authenticated.value = false;
+    } else {
+      authenticated.value = true;
+    }
+  });
 });
 </script>
 
