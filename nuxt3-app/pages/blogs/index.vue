@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import BlogOpen from '~~/components/blogs/BlogOpen.vue';
-import { Blog } from '@/models/posts/Blog';
+import { Blog } from '@/models/posts/blog';
 
 const openedBlog = ref<Blog>();
 
