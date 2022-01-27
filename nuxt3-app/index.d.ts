@@ -20,6 +20,18 @@ declare module '#app' {
     $confirmMessages: Ref<Message[]>;
     $addConfirmMessage: (message: Message) => void;
     $removeConfirmMessage: (message: Message) => void;
+
+    $userDetail: Ref<UserData>;
+    $groupDetail: Ref<GroupData>;
+
+    /**
+     * Set detail data
+     */
+    $setDetail: (userOrGroup: UserOrGroup) => void;
+
+    $closeDetail: () => void;
+    $toggleDetail: (userOrGroup: UserOrGroup) => void;
+    $goBackDetail: () => void;
   }
 }
 
@@ -35,6 +47,18 @@ declare module '@vue/runtime-core' {
     $confirmMessages: Ref<Message[]>;
     $addConfirmMessage: (message: Message) => void;
     $removeConfirmMessage: (message: Message) => void;
+
+    $userDetail: Ref<UserData>;
+    $groupDetail: Ref<GroupData>;
+
+    /**
+     * Set detail data
+     */
+    $setDetail: (userOrGroup: UserOrGroup) => void;
+
+    $closeDetail: () => void;
+    $toggleDetail: (userOrGroup: UserOrGroup) => void;
+    $goBackDetail: () => void;
   }
 }
 
