@@ -23,12 +23,6 @@ import Button from '@/components/buttons/Button.vue';
 import { PostInterface } from '@/models/posts/post';
 
 const router = useRouter();
-const fromDate = computed(() => {
-  const query = router.currentRoute.value?.query;
-
-  if (!query?.from) return new Date();
-  return new Date(query.from as string);
-});
 
 // HANDLE OPEN BLOG POST
 const openPost = async (postInterface: PostInterface) => {

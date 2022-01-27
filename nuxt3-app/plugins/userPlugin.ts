@@ -52,7 +52,7 @@ const signIn = async (email: string, password: string) => {
       data: { email, password },
     });
   } catch (error) {
-    return Error('Verkeerde email of wachtwoord');
+    return { error: Error('Verkeerde email of wachtwoord') };
   }
 
   return await refreshUser();

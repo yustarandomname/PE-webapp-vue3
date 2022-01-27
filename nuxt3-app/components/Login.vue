@@ -40,10 +40,10 @@ const login = async (e: Event) => {
   if (!e || e.type != 'submit' || !loading) return;
   loading.value = true;
 
-  // TODO
-  console.log('login');
+  const { $signIn } = useNuxtApp();
+  const response = await $signIn(email.value, password.value);
 
-  error.value = '';
+  error.value = response?.error?.message || '';
   loading.value = false;
 };
 </script>

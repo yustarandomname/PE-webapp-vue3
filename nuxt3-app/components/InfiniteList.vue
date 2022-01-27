@@ -68,7 +68,6 @@ const loadMore = async () => {
   itemsToLoad.value = fetchAmount;
 
   const posts = await Post.fetchNext(fetchAmount);
-  console.log({ posts });
 
   if (!posts) return (itemsToLoad.value = 0);
   if (posts.length == 0) {

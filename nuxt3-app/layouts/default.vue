@@ -1,5 +1,7 @@
 <template>
   <div>
+    <NavigationBar />
+
     <!-- If user is authenticated -> show content | else -> show login screen -->
     <slot v-if="authenticated"></slot>
     <Login v-else />
@@ -9,6 +11,9 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
+  router: {
+    mode: 'hash',
+  },
 };
 </script>
 
