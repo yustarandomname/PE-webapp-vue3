@@ -1,4 +1,5 @@
 import { useNuxtApp } from '#app';
+import { Method } from 'axios';
 import { Post, PostInterface } from './post';
 
 interface NewBlog {
@@ -17,10 +18,6 @@ export class Blog extends Post {
     this.type = 'blog';
   }
 
-  static init(data: PostInterface) {
-    return new Blog(data);
-  }
-
   static async fetchBlog(id: number) {
     const { $httpClient } = useNuxtApp();
     const { data } = await $httpClient(`v1/news/items/${id}`);
@@ -30,7 +27,7 @@ export class Blog extends Post {
     return new Blog(data.data);
   }
 
-  async save(image?: File, method = 'POST') {
+  async save(image?: File, method: Method = 'POST') {
     const { $httpClient } = useNuxtApp();
 
     const newBlog: NewBlog = {

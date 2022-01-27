@@ -1,7 +1,6 @@
 import { useNuxtApp } from '#app';
 import { HasPhoto, PhotoMetaData } from '../hasPhoto';
 import { ResData } from '../response';
-import { Blog } from './blog';
 import { Comment, CommentInterface } from './comment';
 
 // The user that posted the post
@@ -68,10 +67,11 @@ export class Post extends HasPhoto implements PostInterface {
     this.content = post.content;
     this.posterType = post.posterType;
     this.category = post.category;
-    this.comments = post.comments;
     this.likedBy = post.likedBy;
     this.createdAt = post.createdAt;
     this.updatedAt = post.updatedAt;
+
+    this.comments = post.comments.map((comment) => new Comment(comment));
 
     this.poster = new Poster(
       post.poster.userId,
@@ -91,13 +91,14 @@ export class Post extends HasPhoto implements PostInterface {
   static async fetchNext(pageSize: number): Promise<Post[]> {
     // TODO: implement pagination here
     const { $httpClient } = useNuxtApp();
-    const { data } = (await $httpClient('v1/news/items')) as ResData<
-      PostInterface[]
-    >;
-    console.log(data);
+    // const { data } = (await $httpClient('v1/news/items')) as ResData<
+    //   PostInterface[]
+    // >;
+
+    let data: ResData<PostInterface[]>;
 
     // if status is not 200
-    if (data?.status != 'ok') return [];
+    // if (data?.status != 'ok') return [];
 
     // data: {status: 'ok', data: Post[]}
     return [];

@@ -16,6 +16,7 @@ export class Comment implements CommentInterface {
   createdAt: string;
   poster: User;
   endpoint?: string;
+  currentUserIsOwner: boolean = false;
 
   constructor(comment: CommentInterface) {
     this.id = comment.id;
@@ -24,5 +25,8 @@ export class Comment implements CommentInterface {
     this.createdAt = comment.createdAt;
     this.poster = comment.poster;
     this.endpoint = `news/items/${this.itemId}/comments`;
+
+    const { $user } = useNuxtApp();
+    this.currentUserIsOwner = $user.value.userId == this.poster.userId;
   }
 }

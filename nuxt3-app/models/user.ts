@@ -53,4 +53,13 @@ export class User extends HasPhoto implements UserInterface {
 
     return ($user as Ref<UserInterface>)?.value?.userId == id;
   }
+
+  static async getUserById(id?: string) {
+    const { $user, $httpClient } = useNuxtApp();
+
+    // TODO: add user endpoint
+    // const { data } = await $httpClient(`v1/users/${id}`);
+    const data = $user.value;
+    return new User(data);
+  }
 }
