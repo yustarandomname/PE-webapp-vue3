@@ -1,16 +1,13 @@
-/**
- * @Key string
- * @Type 'string' | 'number' | 'boolean' | 'date'
- * @Description (optional) string
- * @Entries (optional) array
- * @Size (optional) number
- * @Append (optional) string
- */
-export interface SearchOrder<T> {
-  key: keyof T;
-  type: 'string' | 'number' | 'date' | 'boolean';
-  description?: string;
-  entries?: T[];
-  size?: number;
+interface Item<T> {
+  description: string;
+  type: string;
+  keys?: string[];
   append?: string;
+  entries?: T[];
+  distictEntries?: { [key: string]: number };
+  distinctEntySize?: number;
 }
+
+export type SearchItem<T> = {
+  [key in keyof Partial<T>]: Item<T>;
+};

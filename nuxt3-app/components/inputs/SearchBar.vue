@@ -6,17 +6,16 @@
   />
 
   <div class="suggestions">
-    <div v-for="suggestion in suggestions" class="categories">
-      <template v-if="suggestion.entries?.length">
-        <div class="title">{{ suggestion.description }}</div>
-        <div
-          v-for="item in suggestion.entries.slice(0, suggestion.size)"
-          class="suggestion"
-        >
-          <div class="name">{{ item[title] }}</div>
-          <div class="description">
-            <span v-html="item[suggestion.key]"></span>
-            <span v-if="suggestion.append">{{ suggestion.append }}</span>
+    <div v-for="[key, value] in Object.entries(suggestions)" class="categories">
+      <template v-if="value.distinctEntySize">
+        <div class="title">{{ key }}</div>
+        <div class="suggestions">
+          <div
+            v-for="entry in Object.entries(value.distictEntries)"
+            class="suggestion"
+          >
+            <div class="name">{{ getDescription(entry[0], value.keys) }}</div>
+            <div class="description">({{ entry[1] }})</div>
           </div>
         </div>
       </template>
@@ -26,49 +25,69 @@
 
 <script setup lang="ts">
 import Input from '~~/components/inputs/Input.vue';
-import { SearchOrder } from '~~/models/searchOrder';
+import { SearchItem } from '~~/models/searchOrder';
 
 const props = defineProps<{
   data: object[];
   title: string;
-  order?: SearchOrder<any>[];
+  searchItems?: SearchItem<any>;
   maxSuggestions: number;
 }>();
 const searchQuery = ref<string>('');
-const suggestion_i = ref<number>(0);
 
-const suggestions = computed<SearchOrder<any>[]>(() => {
+const getDescription = (
+  description: object | string | number,
+  keys: string[]
+) => {
+  if (typeof description === 'string') {
+    return description;
+  }
+  const result = keys.reduce((acc, key) => {
+    if (description[key]) {
+      return `${acc} ${description[key]}`;
+    }
+    return acc;
+  }, '');
+  return result;
+};
+
+const suggestions = computed<SearchItem<any>>(() => {
   const val = searchQuery.value;
 
-  // reset entries // todo filter entries not reset
-  props.order.map((o) => {
-    o.entries = [];
-    o.size = 0;
-    return o;
-  });
+  if (!val) return props.searchItems;
+  const searchItems = { ...props.searchItems };
 
-  if (val.length == 0 || !props.order?.length) return;
+  for (const [key, value] of Object.entries(searchItems)) {
+    value.distictEntries = {};
 
-  suggestion_i.value = 0;
-  const res = props.order.map((order) => {
-    props.data.forEach((item) => {
-      const key = (item[order.key] || '').toString();
+    value.entries = props.data.filter((item) => {
+      if (value.type == 'object') {
+        const filteredKeys = value.keys.filter((k) => {
+          const x = (item[key][k] || '').toString().toLowerCase();
+          return x.includes(val.toLowerCase());
+        });
 
-      if (key.includes(val)) {
-        order.entries = [...order.entries, item];
+        return filteredKeys.length > 0;
       }
-    });
-    suggestion_i.value += order.entries.length;
-    return order;
-  });
 
-  const itemsPerCat = props.maxSuggestions / suggestion_i.value;
-  res.forEach((o) => {
-    o.size = Math.round(itemsPerCat * o.entries.length);
-  });
-  res.sort((o1, o2) => o2.entries.length - o1.entries.length);
-  console.log(res);
-  return res;
+      const x = (item[key] || '').toString().toLowerCase();
+      return x.includes(val.toLowerCase());
+    });
+
+    value.entries.forEach((entry) => {
+      let k = entry[key];
+      if (value.type == 'object') {
+        const valuePrimaryKey = value.keys[0];
+        k = entry[key][valuePrimaryKey];
+      }
+      if (value.distictEntries[k]) value.distictEntries[k]++;
+      else value.distictEntries[k] = 1;
+    });
+
+    value.distinctEntySize = Object.keys(value.distictEntries).length;
+  }
+
+  return props.searchItems;
 });
 </script>
 

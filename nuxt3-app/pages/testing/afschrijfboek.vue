@@ -14,9 +14,9 @@
         <Button class="daylight" size="small" icon="light_mode"></Button>
       </div>
       <SearchBar
-        :data="afschrijfItems"
+        :data="boten"
         title="item_name"
-        :order="searchOrder"
+        :searchItems="searchItems"
         :maxSuggestions="10"
       ></SearchBar>
     </Container>
@@ -29,16 +29,22 @@ import Button from '~~/components/buttons/Button.vue';
 import Input from '~~/components/inputs/Input.vue';
 import SearchBar from '~~/components/inputs/SearchBar.vue';
 import { ComputedDateTime } from '~~/models/dateTime';
-import { SearchOrder } from '~~/models/searchOrder';
-import { afschrijfItems, AfschrijfItem } from '~~/data/afschrijfboek_items';
+import { SearchItem } from '~~/models/searchOrder';
+import { boten, Boat } from '~~/data/boats';
 
-const searchOrder: SearchOrder<AfschrijfItem>[] = [
-  { key: 'item_name', type: 'string', description: 'Naam' },
-  { key: 'weight', type: 'string', description: 'Gewicht', append: 'kg' },
-  { key: 'class_id', type: 'number', description: 'Type' },
-  { key: 'subcategory_id', type: 'number', description: 'Sub type' },
-  { key: 'year', type: 'number', description: 'Bouwjaar' },
-];
+const searchItems: SearchItem<Boat> = {
+  name: { description: 'Naam', type: 'string' },
+  boatType: {
+    description: 'Type',
+    type: 'object',
+    keys: ['fullname', 'size', 'rowers'],
+  },
+  year: { description: 'Jaar', type: 'number' },
+  isAvailable: { description: 'Beschikbaar', type: 'boolean' },
+  builder: { description: 'Bouwer', type: 'string' },
+  minWeight: { description: 'Min. gewicht', type: 'number' },
+  maxWeight: { description: 'Max. gewicht', type: 'number' },
+};
 
 const fromDate = new ComputedDateTime();
 const toDate = new ComputedDateTime();
