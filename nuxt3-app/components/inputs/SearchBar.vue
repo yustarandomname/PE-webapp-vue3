@@ -49,23 +49,23 @@ const suggestions = computed<SearchOrder<any>[]>(() => {
 
   if (val.length == 0 || !props.order?.length) return;
 
-  let i = 0;
+  suggestion_i.value = 0;
   const res = props.order.map((order) => {
     props.data.forEach((item) => {
       const key = (item[order.key] || '').toString();
 
       if (key.includes(val)) {
-        i++;
         order.entries = [...order.entries, item];
       }
     });
+    suggestion_i.value += order.entries.length;
     return order;
   });
 
-  suggestion_i.value = i;
-  res.forEach(
-    (o) => (o.size = Math.round((o.entries.length / i) * props.maxSuggestions))
-  );
+  const itemsPerCat = props.maxSuggestions / suggestion_i.value;
+  res.forEach((o) => {
+    o.size = Math.round(itemsPerCat * o.entries.length);
+  });
   res.sort((o1, o2) => o2.entries.length - o1.entries.length);
   console.log(res);
   return res;
