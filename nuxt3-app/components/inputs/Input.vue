@@ -13,12 +13,12 @@
         @focus="focus = true"
         @blur="focus = false"
       />
-      <ion-icon
+      <i
         v-if="icon"
-        :icon="icon"
-        class="icon"
+        class="material-icons-outlined"
         @click.stop="emitIconClick"
-      />
+        >{{ icon }}</i
+      >
     </label>
     <div v-if="error" class="error">{{ error }}</div>
   </div>

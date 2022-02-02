@@ -3,7 +3,7 @@
     <NavigationBar :key="$user.value?.userId" />
 
     <!-- If user is authenticated -> show content | else -> show login screen -->
-    <slot v-if="authenticated"></slot>
+    <slot v-if="true"></slot>
     <Login v-else />
 
     <Modal v-if="$userDetail?.value" class="detail" @close="$closeDetail">
