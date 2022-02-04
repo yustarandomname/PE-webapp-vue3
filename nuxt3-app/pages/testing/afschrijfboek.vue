@@ -29,7 +29,7 @@ import Button from '~~/components/buttons/Button.vue';
 import Input from '~~/components/inputs/Input.vue';
 import SearchBar from '~~/components/inputs/SearchBar.vue';
 import { ComputedDateTime } from '~~/models/dateTime';
-import { SearchItem } from '~~/models/searchOrder';
+import { SearchItem } from '~~/models/search';
 import { boten, Boat } from '~~/data/boats';
 
 const searchItems: SearchItem<Boat> = {
